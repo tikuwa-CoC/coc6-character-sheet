@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探索者ファイル | クトゥルフ神話TRPG 6版 キャラクターシート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDEEEA; --surface:#FFFFFF; --ink:#1B1E23; --muted:#6B7280;
+  --line:#CBCFD2; --line-soft:#E1E3E0; --accent:#7A1F2B; --accent-soft:#F4E1E2; --accent-deep:#4E1319;
+  --font-display:'Shippori Mincho',serif; --font-body:'Zen Kaku Gothic New',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  background-image:radial-gradient(circle at 1px 1px, rgba(27,30,35,0.05) 1px, transparent 0);
+  background-size:22px 22px; color:var(--ink); font-family:var(--font-body); line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent-soft);color:var(--accent-deep);}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 20px 80px;}
+
+.masthead{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double var(--ink);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;gap:14px;}
+.masthead-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+.masthead h1{font-family:var(--font-display);font-weight:800;font-size:26px;margin:0;letter-spacing:.04em;}
+.masthead-sub{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--font-mono);}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.back-link{font-family:var(--font-mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.05em;}
+.back-link:hover{color:var(--accent);text-decoration:underline;}
+.file-no{font-family:var(--font-mono);font-size:12px;color:var(--accent);border:1px solid var(--accent);padding:5px 10px;border-radius:2px;white-space:nowrap;}
+.mode-toggle{display:inline-flex;border:1px solid var(--ink);border-radius:20px;overflow:hidden;}
+.mode-toggle button{font-family:var(--font-body);font-weight:700;font-size:12px;padding:6px 16px;border:none;background:transparent;color:var(--ink);cursor:pointer;}
+.mode-toggle button.active{background:var(--ink);color:#fff;}
+.mode-toggle button.active[data-mode="view"]{background:var(--accent);}
+
+.view-mode .only-edit{display:none !important;}
+.view-mode input:disabled, .view-mode textarea:disabled, .view-mode select:disabled{
+  border:none !important;background:transparent !important;color:var(--ink) !important;opacity:1 !important;
+  padding-left:0 !important;-webkit-text-fill-color:var(--ink);appearance:none;resize:none;
+}
+.view-mode .stat-card{background:transparent;border-style:dashed;}
+.view-banner{display:none;background:var(--accent-soft);color:var(--accent-deep);font-size:12px;font-family:var(--font-mono);padding:8px 14px;border-radius:4px;margin-bottom:16px;}
+.view-mode .view-banner{display:block;}
+
+.identity{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+@media (max-width:820px){.identity{grid-template-columns:repeat(2,1fr);}}
+.identity-name{grid-column:1/-1;display:flex;flex-direction:column;gap:2px;margin-bottom:2px;}
+.identity-name .furigana{font-size:11px;color:var(--muted);border:none;border-bottom:1px dashed var(--line);background:transparent;padding:2px 2px;width:auto;max-width:260px;font-family:var(--font-body);}
+.identity-name .namefield{font-family:var(--font-display);font-size:22px;font-weight:800;border:none;border-bottom:2px solid var(--ink);background:transparent;padding:4px 2px;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:11px;color:var(--muted);letter-spacing:.06em;font-weight:700;}
+.field input, .field select, .field textarea{
+  font-family:var(--font-body);font-size:14px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:3px;padding:8px 9px;width:100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--accent);}
+
+.vitals{
+  position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;border-radius:6px;
+  padding:14px 18px;margin-bottom:22px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  box-shadow:0 8px 24px -12px rgba(0,0,0,.45);
+}
+.san-badge{width:60px;height:60px;flex:0 0 auto;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:var(--font-mono);}
+.san-badge b{font-size:15px;line-height:1;}
+.san-badge span{font-size:8px;letter-spacing:.1em;color:#c8b9ba;}
+.vital-group{display:flex;gap:20px;flex-wrap:wrap;flex:1;}
+.vital{min-width:62px;}
+.vital .k{font-size:10px;letter-spacing:.08em;color:#9aa0a6;font-family:var(--font-mono);}
+.vital .v{font-family:var(--font-mono);font-size:19px;font-weight:700;}
+
+.tabbar{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:20px;flex-wrap:wrap;}
+.tab{font-family:var(--font-display);font-weight:700;font-size:14px;padding:10px 18px;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none;border-radius:5px 5px 0 0;background:transparent;position:relative;top:1px;}
+.tab.active{color:var(--ink);background:var(--surface);border-color:var(--line);border-bottom:1px solid var(--surface);}
+.panel{display:none;background:var(--surface);border:1px solid var(--line);border-radius:0 6px 6px 6px;padding:22px;}
+.panel.active{display:block;}
+.panel h2{font-family:var(--font-display);font-size:17px;margin:0 0 4px;}
+.panel .desc{font-size:12px;color:var(--muted);margin:0 0 18px;}
+
+.stat-toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media (max-width:720px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-card{border:1px solid var(--line);border-radius:5px;padding:12px;display:flex;flex-direction:column;gap:4px;background:#FCFCFB;}
+.stat-card .label{display:flex;justify-content:space-between;align-items:baseline;}
+.stat-card .label b{font-family:var(--font-display);font-size:15px;}
+.stat-card .jp{font-size:11px;color:var(--muted);}
+.stat-card .formula{font-family:var(--font-mono);font-size:10px;color:var(--muted);}
+.stat-card > input{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--accent-deep);border:none;background:transparent;width:100%;padding:0;}
+.stat-adj{display:flex;gap:8px;margin-top:2px;}
+.stat-adj label{font-size:10px;color:var(--muted);display:flex;flex-direction:column;gap:2px;flex:1;}
+.stat-adj input{font-family:var(--font-mono);font-size:12px;border:1px solid var(--line);border-radius:3px;padding:3px 4px;width:100%;}
+.stat-total{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--font-mono);}
+.stat-total b{color:var(--accent-deep);font-size:14px;}
+.stat-card button.roll-btn{align-self:flex-start;font-size:11px;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;padding:3px 10px;cursor:pointer;font-family:var(--font-mono);margin-top:4px;}
+.stat-card button.roll-btn:hover{background:var(--accent-soft);}
+
+.derived-row{margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media (max-width:720px){.derived-row{grid-template-columns:repeat(2,1fr);}}
+.derived-card{border:1px dashed var(--line);border-radius:5px;padding:12px;text-align:center;}
+.derived-card .k{font-size:11px;color:var(--muted);}
+.derived-card .v{font-family:var(--font-mono);font-size:20px;font-weight:700;margin-top:2px;}
+.derived-card .hint{font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--font-mono);}
+.san-input{width:44px;font-family:var(--font-mono);font-size:18px;font-weight:700;border:none;border-bottom:1px solid var(--line);text-align:right;background:transparent;color:var(--accent-deep);}
+
+.pools{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
+.pool{flex:1;min-width:240px;border:1px solid var(--line);border-radius:5px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:#FCFCFB;flex-wrap:wrap;gap:8px;}
+.pool .name{font-size:12px;color:var(--muted);}
+.pool select{margin-top:4px;font-size:11px;font-family:var(--font-mono);border:1px solid var(--line);border-radius:3px;}
+.pool .corr{display:flex;flex-direction:column;font-size:10px;color:var(--muted);gap:2px;}
+.pool .corr input{width:56px;font-family:var(--font-mono);border:1px solid var(--line);border-radius:3px;padding:3px 5px;}
+.pool .nums{font-family:var(--font-mono);text-align:right;}
+.pool .nums b{font-size:20px;}
+.pool .nums.neg b{color:var(--accent);}
+.pool .total{font-size:11px;color:var(--muted);}
+
+.skill-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap;}
+.skill-table{width:100%;border-collapse:collapse;font-size:13px;}
+.skill-table th{font-family:var(--font-mono);font-size:10px;color:var(--muted);text-align:left;padding:6px;border-bottom:1px solid var(--ink);letter-spacing:.05em;}
+.skill-table td{padding:5px 6px;border-bottom:1px solid var(--line-soft);vertical-align:middle;}
+.skill-table tr:hover td{background:#FAF7F0;}
+.cat-row td{font-family:var(--font-display);font-weight:700;font-size:12.5px;color:var(--accent-deep);background:var(--accent-soft);padding:6px 8px;border-bottom:1px solid var(--line);}
+.cat-add-row td{padding:8px 6px;}
+.skill-table.no-int-col .int-col{display:none;}
+.skill-name{display:flex;align-items:baseline;gap:3px;flex-wrap:wrap;}
+.skill-name .spec-input{width:64px;border:none;border-bottom:1px dashed var(--line);background:transparent;font-family:var(--font-body);font-size:12px;color:var(--muted);padding:1px 2px;}
+.skill-name .spec-input:focus{border-color:var(--accent);color:var(--ink);}
+.skill-table input[type=number]{width:52px;font-family:var(--font-mono);font-size:16px;border:1px solid var(--line);border-radius:3px;padding:5px 6px;text-align:right;}
+.skill-table input[type=number]:focus{border-color:var(--accent);background:#fff;}
+.skill-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.skill-table-wrap .skill-table{min-width:700px;}
+@media (max-width:720px){
+  .wrap{padding:18px 10px 60px;}
+  .masthead{align-items:flex-start;}
+  .masthead h1{font-size:22px;}
+  .header-right{width:100%;align-items:flex-start;}
+  .vitals{padding:12px 14px;gap:12px;}
+  .vital-group{gap:12px;}
+  .panel{padding:14px 10px;}
+  .skill-controls{align-items:stretch;}
+  .search{width:100%;min-width:0;font-size:16px;}
+  .skill-table{font-size:13px;}
+  .skill-table th,.skill-table td{padding:7px 6px;}
+  .skill-table .spec-input{font-size:16px;min-height:36px;}
+  .skill-table input[type=number]{min-height:40px;width:58px;font-size:16px;}
+  .skill-table .rm{font-size:18px;padding:6px;}
+  .btn{min-height:42px;}
+  .btn.small{min-height:38px;}
+}
+.base-auto{font-family:var(--font-mono);color:var(--muted);display:inline-block;width:36px;text-align:right;}
+.no-spin::-webkit-outer-spin-button,.no-spin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.no-spin{-moz-appearance:textfield;}
+.skill-total{font-family:var(--font-mono);font-weight:700;width:36px;display:inline-block;text-align:right;}
+.rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;}
+.rm:hover{color:var(--accent);}
+
+.btn{font-family:var(--font-body);font-weight:700;font-size:13px;color:#fff;background:var(--ink);border:none;border-radius:4px;padding:9px 16px;cursor:pointer;}
+.btn:hover{background:var(--accent-deep);}
+.btn.outline{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+.btn.outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn.small{padding:5px 10px;font-size:12px;}
+.search{font-family:var(--font-mono);border:1px solid var(--line);border-radius:4px;padding:7px 10px;font-size:12px;min-width:160px;}
+
+.memo-accordion{display:flex;flex-direction:column;gap:10px;}
+.memo-section{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#FCFCFB;}
+.memo-section summary{font-family:var(--font-display);font-weight:700;font-size:14px;padding:10px 14px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--accent-soft);color:var(--accent-deep);}
+.memo-section summary::-webkit-details-marker{display:none;}
+.memo-section summary::after{content:'▾';font-size:11px;transition:transform .15s;}
+.memo-section:not([open]) summary::after{transform:rotate(-90deg);}
+.memo-section-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
+.memo-section-body > textarea{min-height:90px;font-family:var(--font-body);font-size:13px;border:1px solid var(--line);border-radius:4px;padding:8px;background:#fff;resize:vertical;width:100%;}
+.wealth-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+
+.entry-card{border:1px dashed var(--line);border-radius:5px;padding:12px;position:relative;display:flex;flex-direction:column;gap:8px;}
+.entry-card.locked-entry{background:var(--accent-soft);border-style:solid;border-color:var(--line);margin-bottom:10px;}
+.entry-card.locked-entry input:disabled, .entry-card.locked-entry textarea:disabled{
+  background:#fff;color:var(--ink);opacity:1;border:1px solid var(--line);
+}
+.locked-badge{
+  position:absolute;top:8px;right:10px;font-family:var(--font-mono);font-size:10px;color:var(--accent-deep);
+  border:1px solid var(--accent-deep);border-radius:20px;padding:1px 8px;
+}
+.entry-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;}
+.entry-card label{display:flex;flex-direction:column;font-size:10px;color:var(--muted);gap:2px;}
+.entry-card input, .entry-card textarea{font-family:var(--font-body);font-size:13px;border:1px solid var(--line);border-radius:3px;padding:5px 6px;width:100%;}
+.entry-card textarea{min-height:52px;resize:vertical;}
+.entry-remove{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;}
+.entry-remove:hover{color:var(--accent);}
+.custom-memo-controls{display:flex;gap:6px;}
+.locked-memo{padding:6px 0;}
+.locked-memo .hint{font-size:12px;color:var(--muted);margin:0 0 8px;}
+.locked-form{display:flex;gap:8px;flex-wrap:wrap;}
+.locked-form input{font-family:var(--font-mono);border:1px solid var(--line);border-radius:3px;padding:7px 9px;font-size:13px;max-width:200px;}
+
+.footerbar{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--line);flex-wrap:wrap;gap:10px;}
+.footerbar .note{font-size:11px;color:var(--muted);font-family:var(--font-mono);}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <div class="masthead-eyebrow">Case File — Investigator Dossier</div>
+      <h1 id="pageTitle">探索者ファイル</h1>
+      <div class="masthead-sub" id="pageSub">クトゥルフ神話TRPG 6版 準拠 / キャラクターシート作成ツール</div>
+    </div>
+    <div class="header-right">
+      <a class="back-link" href="index.html">← トップへ戻る</a>
+      <div class="file-no" id="fileNo">FILE No. ----</div>
+      <div class="mode-toggle" id="modeToggle">
+        <button type="button" data-mode="edit" class="active">編集する</button>
+        <button type="button" data-mode="view">閲覧する</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="view-banner">閲覧モードです。内容を変更するには右上の「編集する」を押してください。</div>
+
+  <section class="identity" id="identitySection"></section>
+
+  <div class="vitals">
+    <div class="san-badge"><b id="sanNumBadge">0</b><span id="sanBadgeLabel">正気度</span></div>
+    <div class="vital-group">
+      <div class="vital"><div class="k">HP</div><div class="v" id="hpV">0</div></div>
+      <div class="vital"><div class="k">MP</div><div class="v" id="mpV">0</div></div>
+      <div class="vital"><div class="k" id="sanVitalLabel">SAN</div><div class="v" id="sanV">0/0</div></div>
+      <div class="vital"><div class="k">DB</div><div class="v" id="dbV" style="font-size:15px;">±0</div></div>
+      <div class="vital"><div class="k">アイデア</div><div class="v" id="ideaV">0%</div></div>
+      <div class="vital"><div class="k">幸運</div><div class="v" id="luckV">0%</div></div>
+      <div class="vital"><div class="k">知識</div><div class="v" id="knowV">0%</div></div>
+    </div>
+  </div>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tab active" data-tab="stats">能力値</button>
+    <button class="tab" data-tab="skills">技能</button>
+    <button class="tab" data-tab="memo">メモ</button>
+  </nav>
+
+  <section class="panel active" id="panel-stats">
+    <h2>能力値</h2>
+    <div class="stat-toolbar only-edit">
+      <button class="btn" id="rollAll">8能力値を一括ロール</button>
+      <button class="btn outline" id="clearAll">クリア</button>
+    </div>
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="derived-row">
+      <div class="derived-card">
+        <div class="k">HP</div><div class="v" id="d-hp">0</div>
+        <div class="stat-adj only-edit">
+          <label>増加分<input type="number" id="hp-inc" value="0"></label>
+          <label>一時的<input type="number" id="hp-temp" value="0"></label>
+        </div>
+      </div>
+      <div class="derived-card">
+        <div class="k">MP</div><div class="v" id="d-mp">0</div>
+        <div class="stat-adj only-edit">
+          <label>増加分<input type="number" id="mp-inc" value="0"></label>
+          <label>一時的<input type="number" id="mp-temp" value="0"></label>
+        </div>
+      </div>
+      <div class="derived-card">
+        <div class="k" id="sanDerivedLabel">正気度（SAN）</div>
+        <div class="v"><input type="number" id="san-current" class="san-input" value="0">/<span id="san-max">0</span></div>
+        <div class="hint">ストレス障害領域 <span id="san-indef">0</span></div>
+      </div>
+      <div class="derived-card"><div class="k">ダメージボーナス</div><div class="v" id="d-db">±0</div></div>
+      <div class="derived-card"><div class="k">アイデア</div><div class="v" id="d-idea">0%</div></div>
+      <div class="derived-card"><div class="k">幸運</div><div class="v" id="d-luck">0%</div></div>
+      <div class="derived-card"><div class="k">知識</div><div class="v" id="d-know">0%</div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-skills">
+    <h2>技能</h2>
+
+    <div class="pools" id="poolsSection"></div>
+
+    <div class="skill-controls">
+      <input class="search" id="skillSearch" placeholder="技能を検索…">
+    </div>
+
+    <div class="skill-table-wrap">
+      <table class="skill-table" id="skillTable">
+        <thead>
+        <tr><th style="width:24%;">技能名</th><th>初期</th><th id="thOcc">職業</th><th class="int-col" id="thInt">興味</th><th>成長</th><th>他</th><th>合計</th><th></th></tr>
+        </thead>
+        <tbody id="skillBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-memo">
+    <h2>メモ</h2>
+    <div class="memo-accordion" id="memoAccordion"></div>
+    <div id="customMemoList"></div>
+    <button type="button" class="btn outline only-edit" id="addCustomMemo">＋ メモ欄を追加</button>
+  </section>
+
+  <div class="footerbar">
+    <div class="note">保存はJSONファイルの書き出し・読み込みで行います（ブラウザには保存されません）</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn outline" id="importBtn">読み込む</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+      <button class="btn outline" id="ccfoliaBtn">ココフォリア出力</button>
+      <button class="btn" id="exportBtn">保存する（JSON）</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   データ定義
+--------------------------------------------------------------- */
+/* ---------------------------------------------------------------
+   シート種別（トップページからの ?type= パラメータでタイトルを切替）
+   今後、種別ごとにルールや技能リストを分岐させる場合はここを起点にする
+--------------------------------------------------------------- */
+const SHEET_TYPES = {
+  modern6: {
+    title:'6版現代探索者シート',
+    sub:'クトゥルフ神話TRPG 6版 準拠 / 現代の探索者向けキャラクターシート作成ツール',
+    sanLabel:'SAN', sanFullLabel:'正気度',
+    statMeta:{
+      STR:{jp:'筋力', n:3,d:6,plus:0}, CON:{jp:'体力', n:3,d:6,plus:0},
+      POW:{jp:'精神力', n:3,d:6,plus:0}, DEX:{jp:'敏捷性', n:3,d:6,plus:0},
+      APP:{jp:'外見', n:3,d:6,plus:0}, SIZ:{jp:'体格', n:2,d:6,plus:6},
+      INT:{jp:'知性', n:2,d:6,plus:6}, EDU:{jp:'教育', n:3,d:6,plus:3}
+    },
+    identityFields:[
+      {key:'furigana', type:'furigana', label:'ふりがな'},
+      {key:'name', type:'text', big:'name', label:'探索者名'},
+      {key:'occupation', type:'text', label:'職業'},
+      {key:'age', type:'number', label:'年齢'},
+      {key:'gender', type:'text', label:'性別'},
+      {key:'height', type:'text', label:'身長'},
+      {key:'weight', type:'text', label:'体重'},
+      {key:'birthplace', type:'text', label:'出身'},
+      {key:'hair', type:'text', label:'髪の色'},
+      {key:'eye', type:'text', label:'瞳の色'},
+      {key:'skin', type:'text', label:'肌の色'},
+      {key:'birthday', type:'text', label:'誕生日'},
+    ],
+    breedOptions:null,
+    skillPointMode:'occ_int',
+    skillCategories:[
+      {key:'combat', label:'戦闘技能'},
+      {key:'explore', label:'探索技能'},
+      {key:'action', label:'行動技能'},
+      {key:'negotiate', label:'交渉技能'},
+      {key:'knowledge', label:'知識技能'},
+    ],
+    defaultSkills:[
+      {cat:'combat', name:'回避', formula:'DEXx2'},
+      {cat:'combat', name:'キック', base:25},
+      {cat:'combat', name:'組み付き', base:25},
+      {cat:'combat', name:'こぶし（パンチ）', base:50},
+      {cat:'combat', name:'頭突き', base:10},
+      {cat:'combat', name:'投擲', base:25},
+      {cat:'combat', name:'マーシャルアーツ', base:1},
+      {cat:'combat', name:'拳銃', base:20},
+      {cat:'combat', name:'サブマシンガン', base:15},
+      {cat:'combat', name:'ショットガン', base:30},
+      {cat:'combat', name:'マシンガン', base:15},
+      {cat:'combat', name:'ライフル', base:25},
+
+      {cat:'explore', name:'応急手当', base:30},
+      {cat:'explore', name:'鍵開け', base:1},
+      {cat:'explore', name:'隠す', base:15},
+      {cat:'explore', name:'隠れる', base:10},
+      {cat:'explore', name:'聞き耳', base:25},
+      {cat:'explore', name:'忍び歩き', base:10},
+      {cat:'explore', name:'写真術', base:10},
+      {cat:'explore', name:'精神分析', base:1},
+      {cat:'explore', name:'追跡', base:10},
+      {cat:'explore', name:'登攀', base:40},
+      {cat:'explore', name:'図書館', base:25},
+      {cat:'explore', name:'目星', base:25},
+
+      {cat:'action', name:'運転', base:20, spec:true, specHint:''},
+      {cat:'action', name:'機械修理', base:20},
+      {cat:'action', name:'重機械操作', base:1},
+      {cat:'action', name:'乗馬', base:5},
+      {cat:'action', name:'水泳', base:25},
+      {cat:'action', name:'製作', base:5, spec:true, specHint:''},
+      {cat:'action', name:'操縦', base:1, spec:true, specHint:''},
+      {cat:'action', name:'跳躍', base:25},
+      {cat:'action', name:'電気修理', base:10},
+      {cat:'action', name:'ナビゲート', base:10},
+      {cat:'action', name:'変装', base:1},
+
+      {cat:'negotiate', name:'言いくるめ', base:5},
+      {cat:'negotiate', name:'信用', base:15},
+      {cat:'negotiate', name:'説得', base:15},
+      {cat:'negotiate', name:'値切り', base:5},
+      {cat:'negotiate', name:'母国語', formula:'EDUx5', spec:true, specHint:''},
+
+      {cat:'knowledge', name:'医学', base:5},
+      {cat:'knowledge', name:'オカルト', base:5},
+      {cat:'knowledge', name:'化学', base:1},
+      {cat:'knowledge', name:'クトゥルフ神話', base:0},
+      {cat:'knowledge', name:'芸術', base:5, spec:true, specHint:''},
+      {cat:'knowledge', name:'経理', base:10},
+      {cat:'knowledge', name:'考古学', base:1},
+      {cat:'knowledge', name:'コンピューター', base:1},
+      {cat:'knowledge', name:'心理学', base:5},
+      {cat:'knowledge', name:'人類学', base:1},
+      {cat:'knowledge', name:'生物学', base:1},
+      {cat:'knowledge', name:'地質学', base:1},
+      {cat:'knowledge', name:'電子工学', base:1},
+      {cat:'knowledge', name:'天文学', base:1},
+      {cat:'knowledge', name:'博物学', base:10},
+      {cat:'knowledge', name:'物理学', base:1},
+      {cat:'knowledge', name:'法律', base:5},
+      {cat:'knowledge', name:'薬学', base:1},
+      {cat:'knowledge', name:'歴史', base:5},
+    ],
+    memoSections:[
+      {key:'weapons', kind:'weapons', label:'武器'},
+      {key:'gear', kind:'gear', label:'冒険の装備とその他の所持品'},
+      {key:'wealth', kind:'wealth', label:'収入と財産', fields:[
+        {key:'income',label:'収入'},{key:'cash',label:'手持ち現金'},{key:'savings',label:'預金'},
+        {key:'assets',label:'個人資産'},{key:'realestate',label:'不動産'}
+      ]},
+      {key:'tomes', kind:'simpleList', label:'魔導書、呪文、アーティファクト', titleLabel:'名称'},
+      {key:'encounters', kind:'simpleList', label:'遭遇した超自然の存在', titleLabel:'名称'},
+      {key:'scenarios', kind:'simpleList', label:'通過したシナリオ', titleLabel:'名称'},
+      {key:'free', kind:'freeText', label:'メモ'},
+    ],
+  },
+  cat6: {
+    title:'6版猫探索者シート',
+    sub:'クトゥルフ神話TRPG 6版 準拠 / 猫の探索者向けキャラクターシート作成ツール',
+    sanLabel:'SEN', sanFullLabel:'知覚力',
+    statMeta:{
+      STR:{jp:'筋力', n:1,d:3,plus:0}, CON:{jp:'体力', n:2,d:6,plus:0,min:4},
+      POW:{jp:'精神力', n:2,d:6,plus:6}, DEX:{jp:'敏捷性', n:2,d:6,plus:14},
+      APP:{jp:'外見', n:3,d:6,plus:0}, SIZ:{jp:'体格', fixed:1},
+      INT:{jp:'知性', n:2,d:6,plus:6}, EDU:{jp:'教育', n:3,d:6,plus:3}
+    },
+    identityFields:[
+      {key:'usualName', type:'text', big:'name', label:'普段使用する名前'},
+      {key:'specialName', type:'text', label:'特別な名前'},
+      {key:'secretName', type:'text', label:'秘密の名前'},
+      {key:'breed', type:'breed', label:'血統'},
+      {key:'gender', type:'text', label:'性別'},
+      {key:'age', type:'number', label:'年齢'},
+      {key:'birthplace', type:'text', label:'生まれた場所'},
+      {key:'territory', type:'text', label:'縄張り'},
+    ],
+    breedOptions:[
+      'ドメスティック・ショートヘア','純血種','アビシニアン（ソマリ）','ブリティッシュ・ショートヘア',
+      'シャルトリュー','エジプシャン・マウ','メイン・クーン','マンクス','ペルシャおよびアンゴラ',
+      'ロシアン・ブルー','シャム','サイベリアン','バーマン','バーミーズ','コーニッシュ・レックス',
+      'コラット','ターキッシュ・ヴァン',
+    ],
+    skillPointMode:'single',
+    skillCategories:[
+      {key:'combat', label:'戦闘技能'},
+      {key:'explore', label:'探索技能'},
+      {key:'action', label:'行動技能'},
+      {key:'negotiate', label:'交渉技能'},
+      {key:'knowledge', label:'知識技能'},
+    ],
+    defaultSkills:[
+      {cat:'combat', name:'回避', formula:'DEXx4'},
+      {cat:'combat', name:'噛みつき', base:30},
+      {cat:'combat', name:'組み付き', base:25},
+      {cat:'combat', name:'引き裂き', base:80},
+      {cat:'combat', name:'引っかき', base:40},
+      {cat:'combat', name:'投擲', base:10},
+
+      {cat:'explore', name:'治癒', base:10},
+      {cat:'explore', name:'敏捷', formula:'DEXx2'},
+      {cat:'explore', name:'隠れる', base:25},
+      {cat:'explore', name:'聞き耳', base:40},
+      {cat:'explore', name:'忍び歩き', base:50},
+      {cat:'explore', name:'ヒプノーシス', base:10},
+      {cat:'explore', name:'追跡', base:20},
+      {cat:'explore', name:'登攀', base:50},
+      {cat:'explore', name:'危機感知', base:10},
+      {cat:'explore', name:'嗅ぎ取り', base:50},
+      {cat:'explore', name:'目星', base:25},
+
+      {cat:'action', name:'身づくろい', base:50},
+      {cat:'action', name:'睡眠', base:50},
+      {cat:'action', name:'水泳', base:10},
+      {cat:'action', name:'跳躍', base:50},
+      {cat:'action', name:'ナビゲート', base:25},
+      {cat:'action', name:'夢見', base:25},
+
+      {cat:'negotiate', name:'ヨウル', base:50},
+      {cat:'negotiate', name:'かわいらしさ', formula:'APPx3'},
+      {cat:'negotiate', name:'ヒス', base:50},
+      {cat:'negotiate', name:'地位', base:1},
+      {cat:'negotiate', name:'人語', formula:'INTx2'},
+
+      {cat:'knowledge', name:'オカルト', base:5},
+      {cat:'knowledge', name:'クトゥルフ神話', base:0},
+      {cat:'knowledge', name:'洞察', base:1},
+      {cat:'knowledge', name:'自然', formula:'EDUx2'},
+      {cat:'knowledge', name:'人間知識', formula:'EDUx1'},
+      {cat:'knowledge', name:'ストリート知識', base:1},
+      {cat:'knowledge', name:'夢の知識', base:10},
+    ],
+    memoSections:[
+      {key:'tricks', kind:'tricks', label:'トリック', titleLabel:'トリック名', noteLabel:'効果',
+        fixedEntries:[
+          {title:'月への跳躍', note:'ドリームランドへ行ける'},
+          {title:'九つの生', note:'死をもたらしかねないロールをやり直す'},
+        ]
+      },
+      {key:'gear', kind:'gear', label:'冒険の装備とその他の所持品'},
+      {key:'wealth', kind:'wealth', label:'資産と恩', fields:[
+        {key:'caretaker',label:'主な缶切り（飼い主）'},{key:'territory',label:'個人の縄張り'},
+        {key:'favorReceived',label:'受けた恩'},{key:'favorGiven',label:'与えた恩'}
+      ]},
+      {key:'tomes', kind:'simpleList', label:'魔導書、呪文、アーティファクト', titleLabel:'名称'},
+      {key:'catRelations', kind:'enemyAllyList', label:'猫族の敵と味方', titleLabel:'名称'},
+      {key:'canOpeners', kind:'simpleList', label:'受容可能な缶切り', titleLabel:'名称'},
+      {key:'scenarios', kind:'simpleList', label:'通過したシナリオ', titleLabel:'名称'},
+      {key:'free', kind:'freeText', label:'メモ'},
+    ],
+  },
+};
+const urlParams = new URLSearchParams(location.search);
+const sheetTypeKey = SHEET_TYPES[urlParams.get('type')] ? urlParams.get('type') : 'modern6';
+const sheetType = SHEET_TYPES[sheetTypeKey];
+document.title = sheetType.title + ' | キャラクターシート作成ツール';
+document.getElementById('pageTitle').textContent = sheetType.title;
+document.getElementById('pageSub').textContent = sheetType.sub;
+document.getElementById('sanBadgeLabel').textContent = sheetType.sanFullLabel;
+document.getElementById('sanVitalLabel').textContent = sheetType.sanLabel;
+document.getElementById('sanDerivedLabel').textContent = `${sheetType.sanFullLabel}（${sheetType.sanLabel}）`;
+
+const STAT_KEYS = ['STR','CON','POW','DEX','APP','SIZ','INT','EDU'];
+const STAT_META = sheetType.statMeta;
+
+const IDENTITY_FIELDS = sheetType.identityFields;
+
+const SKILL_CATEGORIES = sheetType.skillCategories;
+const DEFAULT_SKILLS = sheetType.defaultSkills;
+
+function freshWeapon(){ return {id:'w'+Date.now()+Math.random().toString(36).slice(2,6), name:'', success:'', damage:'', range:'', attacks:'', ammo:'', durability:'', malfunction:'', other:''}; }
+function freshGear(){ return {id:'g'+Date.now()+Math.random().toString(36).slice(2,6), name:'', type:'', qty:'', price:'', note:''}; }
+function freshEntry(){ return {id:'i'+Date.now()+Math.random().toString(36).slice(2,6), title:'', note:''}; }
+function freshRelation(){ return {id:'r'+Date.now()+Math.random().toString(36).slice(2,6), kind:'ally', title:'', note:''}; }
+
+let state = {
+  sheetType: sheetTypeKey,
+  viewMode:false,
+  identity: {},
+  stats: Object.fromEntries(STAT_KEYS.map(k=>[k,{base:(STAT_META[k].fixed!==undefined?STAT_META[k].fixed:0),inc:0,temp:0}])),
+  hpAdj:{inc:0,temp:0}, mpAdj:{inc:0,temp:0}, sanCurrent:null, sanManual:false,
+  occFormula: sheetType.skillPointMode==='single' ? 'EDUplusINTx5' : 'EDUx20',
+  occCustom:0, occCorrection:0, intCorrection:0,
+  skills: DEFAULT_SKILLS.map((s,i)=>({
+    id:'s'+i, cat:s.cat, name:s.name, spec:s.spec?'':undefined, specHint:s.specHint||'',
+    formula:s.formula||null, base:s.base!==undefined?s.base:0, occ:0, int:0, growth:0, other:0
+  })),
+  memo:{ custom:[] }
+};
+function ensureMemoArraysForType(){
+  sheetType.memoSections.forEach(sec=>{
+    if(sec.kind==='weapons' || sec.kind==='gear' || sec.kind==='simpleList' || sec.kind==='enemyAllyList' || sec.kind==='tricks'){
+      if(!Array.isArray(state.memo[sec.key])) state.memo[sec.key] = [];
+    } else if(sec.kind==='wealth'){
+      if(!state.memo[sec.key] || typeof state.memo[sec.key]!=='object' || Array.isArray(state.memo[sec.key])) state.memo[sec.key] = {};
+      sec.fields.forEach(f=>{ if(state.memo[sec.key][f.key]===undefined) state.memo[sec.key][f.key]=''; });
+    } else if(sec.kind==='freeText'){
+      if(typeof state.memo[sec.key]!=='string') state.memo[sec.key]='';
+    }
+  });
+  if(!Array.isArray(state.memo.custom)) state.memo.custom = [];
+}
+ensureMemoArraysForType();
+
+function rollDice(n,d,plus){ let t=plus||0; for(let i=0;i<n;i++) t += 1+Math.floor(Math.random()*d); return t; }
+function rollStat(formula){
+  if(formula.fixed!==undefined) return formula.fixed;
+  let v = rollDice(formula.n, formula.d, formula.plus||0);
+  if(formula.min!==undefined && v<formula.min) v = formula.min;
+  return v;
+}
+function statTotal(key){ const s=state.stats[key]; return (s.base||0)+(s.inc||0)+(s.temp||0); }
+document.getElementById('fileNo').textContent = 'FILE No. ' + Math.floor(1000+Math.random()*8999);
+
+/* ---------------- 基本情報タブ ---------------- */
+const identitySection = document.getElementById('identitySection');
+function renderIdentity(){
+  identitySection.innerHTML = '';
+  const dis = state.viewMode ? 'disabled' : '';
+  IDENTITY_FIELDS.forEach((f, idx)=>{
+    if(f.type==='furigana') return; // 直後の name フィールドとまとめて描画
+    if(f.big==='name'){
+      const wrap = document.createElement('div');
+      wrap.className='identity-name';
+      const prev = IDENTITY_FIELDS[idx-1];
+      if(prev && prev.type==='furigana'){
+        wrap.innerHTML = `<input class="furigana" data-key="${prev.key}" placeholder="${prev.label}" value="${state.identity[prev.key]||''}" ${dis}>
+          <input class="namefield" data-key="${f.key}" placeholder="${f.label}" value="${state.identity[f.key]||''}" ${dis}>`;
+      } else {
+        wrap.innerHTML = `<input class="namefield" data-key="${f.key}" placeholder="${f.label}" value="${state.identity[f.key]||''}" ${dis}>`;
+      }
+      identitySection.appendChild(wrap);
+      return;
+    }
+    if(f.type==='breed'){
+      const div = document.createElement('div'); div.className='field';
+      const val = state.identity[f.key]||'';
+      const isCustom = !!val && !sheetType.breedOptions.includes(val);
+      const options = sheetType.breedOptions.map(o=>`<option value="${o}" ${val===o?'selected':''}>${o}</option>`).join('');
+      div.innerHTML = `
+        <label>${f.label}</label>
+        <select data-breedselect="${f.key}" ${dis}>
+          <option value="">未選択</option>
+          ${options}
+          <option value="__custom__" ${isCustom?'selected':''}>自由記述</option>
+        </select>
+        <input type="text" class="breed-custom" data-key="${f.key}" placeholder="血統を入力" value="${isCustom?val:''}" style="${isCustom?'margin-top:6px;':'display:none;margin-top:6px;'}" ${dis}>
+      `;
+      identitySection.appendChild(div);
+      return;
+    }
+    const div = document.createElement('div'); div.className='field';
+    div.innerHTML = `<label>${f.label}</label><input data-key="${f.key}" type="${f.type==='number'?'number':'text'}" value="${state.identity[f.key]||''}" ${dis}>`;
+    identitySection.appendChild(div);
+  });
+}
+identitySection.addEventListener('input', e=>{
+  if(e.target.matches('[data-key]')) state.identity[e.target.dataset.key] = e.target.value;
+});
+identitySection.addEventListener('change', e=>{
+  if(e.target.matches('[data-breedselect]')){
+    const key = e.target.dataset.breedselect;
+    const customInput = e.target.parentElement.querySelector('.breed-custom');
+    if(e.target.value==='__custom__'){
+      customInput.style.display='';
+      customInput.focus();
+      state.identity[key] = customInput.value || '';
+    } else {
+      customInput.style.display='none';
+      state.identity[key] = e.target.value;
+    }
+  }
+});
+
+/* ---------------- 能力値タブ ---------------- */
+const statsGrid = document.getElementById('statsGrid');
+function renderStatsGrid(){
+  statsGrid.innerHTML = '';
+  const dis = state.viewMode ? 'disabled' : '';
+  STAT_KEYS.forEach(key=>{
+    const m = STAT_META[key], st = state.stats[key];
+    const card = document.createElement('div');
+    card.className='stat-card';
+    const formulaText = m.fixed!==undefined ? '固定値' : `${m.n}D${m.d}${m.plus?('+'+m.plus):''}${m.min?`（最低${m.min}）`:''}`;
+    const rollBtn = m.fixed!==undefined ? '' : `<button type="button" class="roll-btn only-edit" data-roll="${key}">ロール</button>`;
+    card.innerHTML = `
+      <div class="label"><b>${key}</b><span class="jp">${m.jp}</span></div>
+      <div class="formula">${formulaText}</div>
+      <input type="number" data-stat="${key}" data-field="base" value="${st.base||''}" placeholder="0" ${dis}>
+      <div class="stat-adj only-edit">
+        <label>増加分<input type="number" data-stat="${key}" data-field="inc" value="${st.inc||0}"></label>
+        <label>一時的<input type="number" data-stat="${key}" data-field="temp" value="${st.temp||0}"></label>
+      </div>
+      <div class="stat-total">合計 <b id="${key}-total">${statTotal(key)}</b></div>
+      ${rollBtn}
+    `;
+    statsGrid.appendChild(card);
+  });
+}
+renderStatsGrid();
+
+statsGrid.addEventListener('input', e=>{
+  if(e.target.matches('input[data-stat]')){
+    state.stats[e.target.dataset.stat][e.target.dataset.field] = parseInt(e.target.value)||0;
+    recalcAll();
+  }
+});
+statsGrid.addEventListener('click', e=>{
+  if(e.target.matches('[data-roll]')){
+    const key = e.target.dataset.roll, m = STAT_META[key];
+    state.stats[key].base = rollStat(m);
+    renderStatsGrid(); recalcAll();
+  }
+});
+document.getElementById('rollAll').addEventListener('click', ()=>{
+  STAT_KEYS.forEach(key=>{ state.stats[key].base = rollStat(STAT_META[key]); });
+  renderStatsGrid(); recalcAll();
+});
+document.getElementById('clearAll').addEventListener('click', ()=>{
+  STAT_KEYS.forEach(key=> state.stats[key].base = (STAT_META[key].fixed!==undefined ? STAT_META[key].fixed : 0));
+  renderStatsGrid(); recalcAll();
+});
+
+/* ---------------- 派生ステータス ---------------- */
+function dbFromSum(sum){
+  if(sum<=12) return '-1D6'; if(sum<=16) return '-1D4'; if(sum<=24) return '±0';
+  if(sum<=32) return '+1D4'; if(sum<=40) return '+1D6'; if(sum<=56) return '+2D6';
+  if(sum<=72) return '+3D6'; if(sum<=88) return '+4D6';
+  return '+' + (4+Math.ceil((sum-88)/16)) + 'D6';
+}
+function hpBase(){ return Math.ceil((statTotal('CON')+statTotal('SIZ'))/2); }
+function hpTotal(){ return hpBase() + (state.hpAdj.inc||0) + (state.hpAdj.temp||0); }
+function mpBase(){ return statTotal('POW'); }
+function mpTotal(){ return mpBase() + (state.mpAdj.inc||0) + (state.mpAdj.temp||0); }
+
+function recalcAll(){
+  STAT_KEYS.forEach(key=>{ const el=document.getElementById(key+'-total'); if(el) el.textContent = statTotal(key); });
+
+  const hp = hpTotal(), mp = mpTotal();
+  const sanMax = Math.min(99, statTotal('POW')*5);
+  if(state.sanCurrent===null || !state.sanManual) state.sanCurrent = sanMax;
+  const sanCur = state.sanCurrent;
+  const indef = Math.max(0, sanCur - Math.ceil(sanCur/5));
+  const db = dbFromSum(statTotal('STR')+statTotal('SIZ'));
+  const idea = statTotal('INT')*5, luck = statTotal('POW')*5, know = statTotal('EDU')*5;
+
+  document.getElementById('d-hp').textContent = hp;
+  document.getElementById('d-mp').textContent = mp;
+  document.getElementById('san-max').textContent = sanMax;
+  document.getElementById('san-indef').textContent = indef;
+  document.getElementById('d-db').textContent = db;
+  document.getElementById('d-idea').textContent = idea+'%';
+  document.getElementById('d-luck').textContent = luck+'%';
+  document.getElementById('d-know').textContent = know+'%';
+
+  const sanCurEl = document.getElementById('san-current');
+  if(document.activeElement!==sanCurEl) sanCurEl.value = sanCur;
+
+  document.getElementById('hpV').textContent = hp;
+  document.getElementById('mpV').textContent = mp;
+  document.getElementById('sanV').textContent = sanCur+'/'+sanMax;
+  document.getElementById('sanNumBadge').textContent = sanCur;
+  document.getElementById('dbV').textContent = db;
+  document.getElementById('ideaV').textContent = idea+'%';
+  document.getElementById('luckV').textContent = luck+'%';
+  document.getElementById('knowV').textContent = know+'%';
+
+  recalcOccPool();
+  renderSkills(document.getElementById('skillSearch').value);
+}
+
+['hp-inc','hp-temp'].forEach(id=> document.getElementById(id).addEventListener('input', e=>{
+  state.hpAdj[id.endsWith('inc')?'inc':'temp'] = parseInt(e.target.value)||0; recalcAll();
+}));
+['mp-inc','mp-temp'].forEach(id=> document.getElementById(id).addEventListener('input', e=>{
+  state.mpAdj[id.endsWith('inc')?'inc':'temp'] = parseInt(e.target.value)||0; recalcAll();
+}));
+document.getElementById('san-current').addEventListener('input', e=>{
+  state.sanCurrent = parseInt(e.target.value)||0; state.sanManual = true; recalcAll();
+});
+
+/* ---------------- 技能タブ ---------------- */
+function skillBaseValue(sk){
+  if(!sk.formula) return sk.base||0;
+  const m = sk.formula.match(/^([A-Z]+)x?(\d*)$/);
+  if(m && STAT_KEYS.includes(m[1])){
+    const mult = m[2] ? parseInt(m[2]) : 1;
+    return statTotal(m[1]) * mult;
+  }
+  return sk.base||0;
+}
+function occFormulaValue(){
+  switch(state.occFormula){
+    case 'EDUx20': return statTotal('EDU')*20;
+    case 'EDUx10+DEXx10': return statTotal('EDU')*10 + statTotal('DEX')*10;
+    case 'EDUx10+STRx10': return statTotal('EDU')*10 + statTotal('STR')*10;
+    case 'EDUx10+APPx10': return statTotal('EDU')*10 + statTotal('APP')*10;
+    case 'EDUx10+POWx10': return statTotal('EDU')*10 + statTotal('POW')*10;
+    case 'EDUplusINTx5': return (statTotal('EDU')+statTotal('INT'))*5;
+    case 'custom': return state.occCustom||0;
+    default: return 0;
+  }
+}
+function recalcOccPool(render=true){
+  const occTotal = occFormulaValue() + (state.occCorrection||0);
+  const occUsed = state.skills.reduce((a,sk)=>a+(sk.occ||0),0);
+  const occTotalEl = document.getElementById('occTotal');
+  const occRemainEl = document.getElementById('occRemain');
+  if(occTotalEl) occTotalEl.textContent = occTotal;
+  if(occRemainEl){
+    occRemainEl.textContent = occTotal-occUsed;
+    occRemainEl.parentElement.classList.toggle('neg', (occTotal-occUsed)<0);
+  }
+
+  if(sheetType.skillPointMode!=='single'){
+    const intTotal = statTotal('INT')*10 + (state.intCorrection||0);
+    const intUsed = state.skills.reduce((a,sk)=>a+(sk.int||0),0);
+    const intTotalEl = document.getElementById('intTotal');
+    const intRemainEl = document.getElementById('intRemain');
+    if(intTotalEl) intTotalEl.textContent = intTotal;
+    if(intRemainEl){
+      intRemainEl.textContent = intTotal-intUsed;
+      intRemainEl.parentElement.classList.toggle('neg', (intTotal-intUsed)<0);
+    }
+  }
+  if(render) renderSkills(document.getElementById('skillSearch').value);
+}
+function renderPools(){
+  const container = document.getElementById('poolsSection');
+  const dis = state.viewMode ? 'disabled' : '';
+  if(sheetType.skillPointMode==='single'){
+    container.innerHTML = `
+      <div class="pool">
+        <div>
+          <div class="name">技能ポイント</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:4px;">（EDU＋INT）× 5</div>
+        </div>
+        <div class="corr only-edit">補正<input type="number" class="no-spin" id="occCorrection" value="${state.occCorrection||0}" ${dis}></div>
+        <div class="nums" id="occNums"><b id="occRemain">0</b><div class="total">残り / 総計 <span id="occTotal">0</span></div></div>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="pool">
+        <div>
+          <div class="name">職業ポイント</div>
+          <select id="occFormula" ${dis}>
+            <option value="EDUx20">EDU × 20</option>
+            <option value="EDUx10+DEXx10">EDU×10 + DEX×10</option>
+            <option value="EDUx10+STRx10">EDU×10 + STR×10</option>
+            <option value="EDUx10+APPx10">EDU×10 + APP×10</option>
+            <option value="EDUx10+POWx10">EDU×10 + POW×10</option>
+            <option value="custom">手動入力</option>
+          </select>
+        </div>
+        <div class="corr only-edit">補正<input type="number" class="no-spin" id="occCorrection" value="${state.occCorrection||0}" ${dis}></div>
+        <div class="nums" id="occNums"><b id="occRemain">0</b><div class="total">残り / 総計 <span id="occTotal">0</span></div></div>
+      </div>
+      <div class="pool">
+        <div><div class="name">興味ポイント</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:4px;">INT × 10</div></div>
+        <div class="corr only-edit">補正<input type="number" class="no-spin" id="intCorrection" value="${state.intCorrection||0}" ${dis}></div>
+        <div class="nums" id="intNums"><b id="intRemain">0</b><div class="total">残り / 総計 <span id="intTotal">0</span></div></div>
+      </div>
+    `;
+    document.getElementById('occFormula').value = state.occFormula;
+    document.getElementById('occFormula').addEventListener('change', e=>{
+      state.occFormula = e.target.value;
+      if(state.occFormula==='custom'){
+        const v = prompt('職業ポイントを手動で入力してください', state.occCustom||0);
+        state.occCustom = parseInt(v)||0;
+      }
+      recalcOccPool();
+    });
+    document.getElementById('intCorrection').addEventListener('input', e=>{ state.intCorrection=parseInt(e.target.value)||0; recalcOccPool(); });
+  }
+  document.getElementById('occCorrection').addEventListener('input', e=>{ state.occCorrection=parseInt(e.target.value)||0; recalcOccPool(); });
+
+  document.getElementById('thOcc').textContent = sheetType.skillPointMode==='single' ? '技能P' : '職業';
+  if(sheetType.skillPointMode==='single'){
+    const thInt = document.getElementById('thInt');
+    if(thInt) thInt.remove();
+  }
+}
+
+const skillBody = document.getElementById('skillBody');
+function renderSkills(filter){
+  const q = (filter||'').trim();
+  const showIntCol = sheetType.skillPointMode!=='single';
+  const colCount = showIntCol ? 8 : 7;
+  skillBody.innerHTML='';
+  SKILL_CATEGORIES.forEach(cat=>{
+    const rows = state.skills.filter(sk=>{
+      if(sk.cat!==cat.key) return false;
+      if(q && !sk.name.includes(q) && !(sk.spec||'').includes(q)) return false;
+      if(state.viewMode){
+        const invested = (sk.occ||0)+(sk.int||0)+(sk.growth||0)+(sk.other||0);
+        if(invested<=0) return false;
+      }
+      return true;
+    });
+    const showEmpty = !state.viewMode && !q;
+    if(!rows.length && !showEmpty) return;
+
+    const catTr = document.createElement('tr');
+    catTr.className='cat-row';
+    catTr.innerHTML = `<td colspan="${colCount}">${cat.label}</td>`;
+    skillBody.appendChild(catTr);
+
+    rows.forEach(sk=>{
+      const base = skillBaseValue(sk);
+      const total = base + (sk.occ||0) + (sk.int||0) + (sk.growth||0) + (sk.other||0);
+      const dis = state.viewMode ? 'disabled' : '';
+      const intCell = showIntCol ? `<td><input type="number" class="no-spin" data-field="int" data-id="${sk.id}" value="${sk.int||0}" ${dis}></td>` : '';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><div class="skill-name">${sk.name}${sk.spec!==undefined ? `<span>（</span><input class="spec-input" data-id="${sk.id}" data-field="spec" value="${sk.spec||''}" placeholder="${sk.specHint||''}" ${dis}><span>）</span>` : ''}</div></td>
+        <td>${sk.custom
+          ? `<input type="number" class="no-spin" data-field="base" data-id="${sk.id}" value="${sk.base||0}" ${dis}>`
+          : `<span class="base-auto">${base}</span>`}</td>
+        <td><input type="number" class="no-spin" data-field="occ" data-id="${sk.id}" value="${sk.occ||0}" ${dis}></td>
+        ${intCell}
+        <td><input type="number" class="no-spin" data-field="growth" data-id="${sk.id}" value="${sk.growth||0}" ${dis}></td>
+        <td><input type="number" class="no-spin" data-field="other" data-id="${sk.id}" value="${sk.other||0}" ${dis}></td>
+        <td><span class="skill-total">${total}</span></td>
+        <td>${sk.custom ? `<button type="button" class="rm only-edit" data-rm="${sk.id}" title="削除">✕</button>` : ''}</td>
+      `;
+      skillBody.appendChild(tr);
+    });
+
+    const addTr = document.createElement('tr');
+    addTr.className='cat-add-row only-edit';
+    addTr.innerHTML = `<td colspan="${colCount}"><button type="button" class="btn small outline" data-addcat="${cat.key}">＋ ${cat.label}を追加</button></td>`;
+    skillBody.appendChild(addTr);
+  });
+}
+renderSkills();
+
+skillBody.addEventListener('input', e=>{
+  const id = e.target.dataset.id, field = e.target.dataset.field;
+  if(!id) return;
+  const sk = state.skills.find(s=>s.id===id);
+  if(!sk) return;
+  if(field==='spec'){
+    sk.spec = e.target.value;
+    return;
+  }
+  sk[field] = parseInt(e.target.value)||0;
+  const row = e.target.closest('tr');
+  if(row){
+    const total = skillBaseValue(sk) + (sk.occ||0) + (sk.int||0) + (sk.growth||0) + (sk.other||0);
+    const totalEl = row.querySelector('.skill-total');
+    if(totalEl) totalEl.textContent = total;
+  }
+  recalcOccPool(false);
+});
+skillBody.addEventListener('click', e=>{
+  if(e.target.matches('[data-rm]')){
+    state.skills = state.skills.filter(s=>s.id!==e.target.dataset.rm);
+    renderSkills(document.getElementById('skillSearch').value);
+    recalcOccPool();
+  }
+  if(e.target.matches('[data-addcat]')){
+    const cat = e.target.dataset.addcat;
+    const name = prompt('追加する技能名を入力してください');
+    if(!name) return;
+    state.skills.push({id:'s'+Date.now(), cat, name, custom:true, spec:undefined, formula:null, base:0, occ:0, int:0, growth:0, other:0});
+    renderSkills(document.getElementById('skillSearch').value);
+  }
+});
+document.getElementById('skillSearch').addEventListener('input', e=> renderSkills(e.target.value));
+
+/* ---------------- メモタブ ---------------- */
+function renderMemoSections(){
+  ensureMemoArraysForType();
+  const container = document.getElementById('memoAccordion');
+  container.innerHTML = '';
+  const dis = state.viewMode ? 'disabled' : '';
+  sheetType.memoSections.forEach(sec=>{
+    const det = document.createElement('details');
+    det.className='memo-section';
+    det.open = true;
+    let bodyHtml = '';
+    if(sec.kind==='weapons'){
+      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addweapon="${sec.key}">＋ 武器を追加</button>`;
+    } else if(sec.kind==='gear'){
+      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addgear="${sec.key}">＋ 所持品を追加</button>`;
+    } else if(sec.kind==='wealth'){
+      bodyHtml = `<div class="wealth-grid">` + sec.fields.map(f=>
+        `<div class="field"><label>${f.label}</label><input data-wealthkey="${sec.key}" data-field="${f.key}" value="${(state.memo[sec.key][f.key]||'')}" ${dis}></div>`
+      ).join('') + `</div>`;
+    } else if(sec.kind==='simpleList'){
+      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addsimple="${sec.key}">＋ 追加</button>`;
+    } else if(sec.kind==='tricks'){
+      const lockedHtml = (sec.fixedEntries||[]).map(t => `
+        <div class="entry-card locked-entry">
+          <div class="locked-badge">標準</div>
+          <label>${sec.titleLabel||'名称'}<input value="${t.title}" disabled></label>
+          <label>${sec.noteLabel||'効果'}<textarea disabled>${t.note}</textarea></label>
+        </div>
+      `).join('');
+      bodyHtml = lockedHtml + `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addsimple="${sec.key}">＋ 追加</button>`;
+    } else if(sec.kind==='enemyAllyList'){
+      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addrelation="${sec.key}">＋ 追加</button>`;
+    } else if(sec.kind==='freeText'){
+      bodyHtml = `<textarea data-freekey="${sec.key}" placeholder="自由記述" ${dis}>${state.memo[sec.key]||''}</textarea>`;
+    }
+    det.innerHTML = `<summary>${sec.label}</summary><div class="memo-section-body">${bodyHtml}</div>`;
+    container.appendChild(det);
+  });
+  sheetType.memoSections.forEach(sec=>{
+    if(sec.kind==='weapons') renderWeaponEntries(sec.key);
+    if(sec.kind==='gear') renderGearEntries(sec.key);
+    if(sec.kind==='simpleList' || sec.kind==='tricks') renderSimpleEntries(sec.key, sec.titleLabel||'名称', sec.noteLabel||'メモ');
+    if(sec.kind==='enemyAllyList') renderRelationEntries(sec.key, sec.titleLabel||'名称');
+  });
+}
+
+function renderWeaponEntries(key){
+  const c = document.querySelector(`.entries[data-list="${key}"]`); if(!c) return;
+  c.innerHTML='';
+  const dis = state.viewMode ? 'disabled' : '';
+  (state.memo[key]||[]).forEach(w=>{
+    const div = document.createElement('div'); div.className='entry-card';
+    div.innerHTML = `
+      <button type="button" class="entry-remove only-edit" data-rmweapon="${key}:${w.id}">✕</button>
+      <div class="entry-fields">
+        <label>名称<input data-wf="name" data-list="${key}" data-id="${w.id}" value="${w.name||''}" ${dis}></label>
+        <label>成功率<input data-wf="success" data-list="${key}" data-id="${w.id}" value="${w.success||''}" ${dis}></label>
+        <label>ダメージ<input data-wf="damage" data-list="${key}" data-id="${w.id}" value="${w.damage||''}" ${dis}></label>
+        <label>射程<input data-wf="range" data-list="${key}" data-id="${w.id}" value="${w.range||''}" ${dis}></label>
+        <label>回数<input data-wf="attacks" data-list="${key}" data-id="${w.id}" value="${w.attacks||''}" ${dis}></label>
+        <label>装弾数<input data-wf="ammo" data-list="${key}" data-id="${w.id}" value="${w.ammo||''}" ${dis}></label>
+        <label>耐久力<input data-wf="durability" data-list="${key}" data-id="${w.id}" value="${w.durability||''}" ${dis}></label>
+        <label>故障<input data-wf="malfunction" data-list="${key}" data-id="${w.id}" value="${w.malfunction||''}" ${dis}></label>
+        <label>その他<input data-wf="other" data-list="${key}" data-id="${w.id}" value="${w.other||''}" ${dis}></label>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+function renderGearEntries(key){
+  const c = document.querySelector(`.entries[data-list="${key}"]`); if(!c) return;
+  c.innerHTML='';
+  const dis = state.viewMode ? 'disabled' : '';
+  (state.memo[key]||[]).forEach(g=>{
+    const div = document.createElement('div'); div.className='entry-card';
+    div.innerHTML = `
+      <button type="button" class="entry-remove only-edit" data-rmgear="${key}:${g.id}">✕</button>
+      <div class="entry-fields">
+        <label>名称<input data-gf="name" data-list="${key}" data-id="${g.id}" value="${g.name||''}" ${dis}></label>
+        <label>単価<input data-gf="type" data-list="${key}" data-id="${g.id}" value="${g.type||''}" ${dis}></label>
+        <label>個数<input data-gf="qty" data-list="${key}" data-id="${g.id}" value="${g.qty||''}" ${dis}></label>
+        <label>価格<input data-gf="price" data-list="${key}" data-id="${g.id}" value="${g.price||''}" ${dis}></label>
+        <label>備考<input data-gf="note" data-list="${key}" data-id="${g.id}" value="${g.note||''}" ${dis}></label>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+function renderSimpleEntries(key, titleLabel, noteLabel){
+  noteLabel = noteLabel || 'メモ';
+  const c = document.querySelector(`.entries[data-list="${key}"]`); if(!c) return;
+  c.innerHTML='';
+  const dis = state.viewMode ? 'disabled' : '';
+  (state.memo[key]||[]).forEach(item=>{
+    const div = document.createElement('div'); div.className='entry-card';
+    div.innerHTML = `
+      <button type="button" class="entry-remove only-edit" data-rmsimple="${key}:${item.id}">✕</button>
+      <label>${titleLabel}<input data-sf="title" data-list="${key}" data-id="${item.id}" value="${item.title||''}" ${dis}></label>
+      <label>${noteLabel}<textarea data-sf="note" data-list="${key}" data-id="${item.id}" ${dis}>${item.note||''}</textarea></label>
+    `;
+    c.appendChild(div);
+  });
+}
+function renderRelationEntries(key, titleLabel){
+  const c = document.querySelector(`.entries[data-list="${key}"]`); if(!c) return;
+  c.innerHTML='';
+  const dis = state.viewMode ? 'disabled' : '';
+  (state.memo[key]||[]).forEach(item=>{
+    const div = document.createElement('div'); div.className='entry-card';
+    div.innerHTML = `
+      <button type="button" class="entry-remove only-edit" data-rmrelation="${key}:${item.id}">✕</button>
+      <div class="entry-fields">
+        <label>区分
+          <select data-rf="kind" data-list="${key}" data-id="${item.id}" ${dis}>
+            <option value="ally" ${item.kind==='ally'?'selected':''}>味方</option>
+            <option value="enemy" ${item.kind==='enemy'?'selected':''}>敵</option>
+          </select>
+        </label>
+        <label>${titleLabel}<input data-rf="title" data-list="${key}" data-id="${item.id}" value="${item.title||''}" ${dis}></label>
+      </div>
+      <label>メモ<textarea data-rf="note" data-list="${key}" data-id="${item.id}" ${dis}>${item.note||''}</textarea></label>
+    `;
+    c.appendChild(div);
+  });
+}
+
+const memoAccordion = document.getElementById('memoAccordion');
+memoAccordion.addEventListener('input', e=>{
+  if(e.target.matches('[data-wf]')){
+    const key=e.target.dataset.list, id=e.target.dataset.id, f=e.target.dataset.wf;
+    const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item[f]=e.target.value;
+  } else if(e.target.matches('[data-gf]')){
+    const key=e.target.dataset.list, id=e.target.dataset.id, f=e.target.dataset.gf;
+    const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item[f]=e.target.value;
+  } else if(e.target.matches('[data-sf]')){
+    const key=e.target.dataset.list, id=e.target.dataset.id, f=e.target.dataset.sf;
+    const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item[f]=e.target.value;
+  } else if(e.target.matches('[data-rf]') && e.target.tagName!=='SELECT'){
+    const key=e.target.dataset.list, id=e.target.dataset.id, f=e.target.dataset.rf;
+    const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item[f]=e.target.value;
+  } else if(e.target.matches('[data-wealthkey]')){
+    const key=e.target.dataset.wealthkey, f=e.target.dataset.field;
+    state.memo[key][f] = e.target.value;
+  } else if(e.target.matches('[data-freekey]')){
+    state.memo[e.target.dataset.freekey] = e.target.value;
+  }
+});
+memoAccordion.addEventListener('change', e=>{
+  if(e.target.matches('[data-rf]') && e.target.tagName==='SELECT'){
+    const key=e.target.dataset.list, id=e.target.dataset.id;
+    const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item.kind=e.target.value;
+  }
+});
+memoAccordion.addEventListener('click', e=>{
+  if(e.target.matches('[data-addweapon]')){
+    const key=e.target.dataset.addweapon; state.memo[key].push(freshWeapon()); renderWeaponEntries(key);
+  } else if(e.target.matches('[data-addgear]')){
+    const key=e.target.dataset.addgear; state.memo[key].push(freshGear()); renderGearEntries(key);
+  } else if(e.target.matches('[data-addsimple]')){
+    const key=e.target.dataset.addsimple;
+    state.memo[key].push(freshEntry());
+    const sec=sheetType.memoSections.find(s=>s.key===key);
+    renderSimpleEntries(key, sec?sec.titleLabel:'名称', sec?sec.noteLabel:'メモ');
+  } else if(e.target.matches('[data-addrelation]')){
+    const key=e.target.dataset.addrelation;
+    state.memo[key].push(freshRelation());
+    const sec=sheetType.memoSections.find(s=>s.key===key);
+    renderRelationEntries(key, sec?sec.titleLabel:'名称');
+  } else if(e.target.matches('[data-rmweapon]')){
+    const [key,id]=e.target.dataset.rmweapon.split(':');
+    state.memo[key]=state.memo[key].filter(x=>x.id!==id); renderWeaponEntries(key);
+  } else if(e.target.matches('[data-rmgear]')){
+    const [key,id]=e.target.dataset.rmgear.split(':');
+    state.memo[key]=state.memo[key].filter(x=>x.id!==id); renderGearEntries(key);
+  } else if(e.target.matches('[data-rmsimple]')){
+    const [key,id]=e.target.dataset.rmsimple.split(':');
+    state.memo[key]=state.memo[key].filter(x=>x.id!==id);
+    const sec=sheetType.memoSections.find(s=>s.key===key);
+    renderSimpleEntries(key, sec?sec.titleLabel:'名称', sec?sec.noteLabel:'メモ');
+  } else if(e.target.matches('[data-rmrelation]')){
+    const [key,id]=e.target.dataset.rmrelation.split(':');
+    state.memo[key]=state.memo[key].filter(x=>x.id!==id);
+    const sec=sheetType.memoSections.find(s=>s.key===key);
+    renderRelationEntries(key, sec?sec.titleLabel:'名称');
+  }
+});
+
+const unlockedMemos = new Set();
+
+function renderCustomMemo(){
+  const c = document.getElementById('customMemoList'); c.innerHTML='';
+  const dis = state.viewMode ? 'disabled' : '';
+  state.memo.custom.forEach(item=>{
+    const det = document.createElement('details');
+    det.className='memo-section';
+    det.open = true;
+    const locked = !!item.password && !unlockedMemos.has(item.id);
+    const bodyInner = locked
+      ? `<div class="locked-memo">
+           <p class="hint">🔒 このメモはパスワードで保護されています</p>
+           <div class="locked-form">
+             <input type="password" class="lock-pass-input" data-unlock="${item.id}" placeholder="パスワード">
+             <button type="button" class="btn small" data-unlockbtn="${item.id}">開錠</button>
+           </div>
+         </div>`
+      : `<textarea data-customid="${item.id}" ${dis}>${item.content||''}</textarea>`;
+    det.innerHTML = `
+      <summary>${item.password ? '🔒 ' : ''}${item.title||'新規メモ'}</summary>
+      <div class="memo-section-body">
+        ${bodyInner}
+        <div class="custom-memo-controls only-edit">
+          <button type="button" class="btn small outline" data-setting="${item.id}">設定</button>
+          <button type="button" class="btn small outline" data-delcustom="${item.id}">削除</button>
+        </div>
+      </div>
+    `;
+    c.appendChild(det);
+  });
+}
+document.getElementById('customMemoList').addEventListener('input', e=>{
+  const id=e.target.dataset.customid;
+  if(!id) return;
+  const item = state.memo.custom.find(x=>x.id===id);
+  if(item) item.content = e.target.value;
+});
+document.getElementById('customMemoList').addEventListener('click', e=>{
+  if(e.target.matches('[data-setting]')){
+    const item = state.memo.custom.find(x=>x.id===e.target.dataset.setting);
+    if(!item) return;
+    const t = prompt('タイトルを入力してください', item.title||'');
+    if(t===null) return;
+    item.title = t;
+    const p = prompt('閲覧用パスワードを設定できます（空欄でパスワードなし）', item.password||'');
+    if(p!==null){
+      item.password = p;
+      if(!p) unlockedMemos.add(item.id);
+    }
+    renderCustomMemo();
+  }
+  if(e.target.matches('[data-delcustom]')){
+    state.memo.custom = state.memo.custom.filter(x=>x.id!==e.target.dataset.delcustom);
+    renderCustomMemo();
+  }
+  if(e.target.matches('[data-unlockbtn]')){
+    const id = e.target.dataset.unlockbtn;
+    const item = state.memo.custom.find(x=>x.id===id);
+    const input = e.target.parentElement.querySelector('[data-unlock]');
+    if(item && input && input.value===item.password){
+      unlockedMemos.add(id);
+      renderCustomMemo();
+    } else {
+      alert('パスワードが違います');
+    }
+  }
+});
+document.getElementById('customMemoList').addEventListener('keydown', e=>{
+  if(e.key==='Enter' && e.target.matches('[data-unlock]')){
+    e.preventDefault();
+    const id = e.target.dataset.unlock;
+    const item = state.memo.custom.find(x=>x.id===id);
+    if(item && e.target.value===item.password){
+      unlockedMemos.add(id);
+      renderCustomMemo();
+    } else {
+      alert('パスワードが違います');
+    }
+  }
+});
+document.getElementById('addCustomMemo').addEventListener('click', ()=>{
+  state.memo.custom.push({id:'c'+Date.now(), title:'新規メモ', content:'', password:''});
+  renderCustomMemo();
+});
+
+function renderMemoAll(){ renderMemoSections(); renderCustomMemo(); }
+
+/* ---------------- タブ切替 ---------------- */
+document.getElementById('tabbar').addEventListener('click', e=>{
+  if(!e.target.matches('.tab')) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById('panel-'+e.target.dataset.tab).classList.add('active');
+});
+
+/* ---------------- 閲覧/編集モード ---------------- */
+function applyViewMode(){
+  document.body.classList.toggle('view-mode', state.viewMode);
+  document.querySelectorAll('#modeToggle button').forEach(b=>
+    b.classList.toggle('active', b.dataset.mode === (state.viewMode ? 'view' : 'edit')));
+  document.querySelectorAll(
+    '#hp-inc, #hp-temp, #mp-inc, #mp-temp, #san-current'
+  ).forEach(el=> el.disabled = state.viewMode);
+  renderIdentity();
+  renderStatsGrid();
+  renderPools();
+  renderSkills(document.getElementById('skillSearch').value);
+  renderMemoAll();
+}
+document.getElementById('modeToggle').addEventListener('click', e=>{
+  if(!e.target.matches('button[data-mode]')) return;
+  state.viewMode = e.target.dataset.mode === 'view';
+  applyViewMode();
+});
+
+
+/* ---------------- 書き出し・読み込み ---------------- */
+function getCharacterName(){
+  const nameField = IDENTITY_FIELDS.find(f=>f.big==='name');
+  return nameField ? (state.identity[nameField.key]||'') : '';
+}
+function identityMemoLines(){
+  const lines = [];
+  IDENTITY_FIELDS.forEach(f=>{
+    if(f.type==='furigana' || f.big==='name') return;
+    const v = state.identity[f.key];
+    if(v) lines.push(`${f.label}：${v}`);
+  });
+  return lines;
+}
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = (getCharacterName() || 'investigator').replace(/[\\/:*?"<>|]/g,'') + '_coc6.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+document.getElementById('importBtn').addEventListener('click', ()=> document.getElementById('importFile').click());
+
+/* ---------------- ココフォリア出力 ---------------- */
+function buildCcfoliaPayload(){
+  const hp = hpTotal(), mp = mpTotal();
+  const sanMax = Math.min(99, statTotal('POW')*5);
+  const sanCur = state.sanCurrent===null ? sanMax : state.sanCurrent;
+
+  // いあきゃら等のココフォリア出力例に合わせ、status / params / commands を構築する。
+  const status = [
+    {label:'HP', value:hp, max:hp},
+    {label:'MP', value:mp, max:mp},
+    {label:sheetType.sanLabel, value:sanCur, max:sanMax},
+  ];
+
+  const params = [];
+  STAT_KEYS.forEach(k=> params.push({label:k, value:String(statTotal(k))}));
+
+  const commandLines = [
+    `1d100<={${sheetType.sanLabel}} 【${sheetType.sanFullLabel}ロール】`,
+    `CCB<=${statTotal('INT')*5} 【アイデア】`,
+    `CCB<=${statTotal('POW')*5} 【幸運】`,
+    `CCB<=${statTotal('EDU')*5} 【知識】`,
+  ];
+
+  // キャラクターシート上の技能順をそのまま使用し、未取得・初期値のみの技能も含めて全出力する。
+  state.skills.forEach(sk=>{
+    const total = skillBaseValue(sk)
+      + (sk.occ||0)
+      + (sk.int||0)
+      + (sk.growth||0)
+      + (sk.other||0);
+    const label = sk.spec ? `${sk.name}（${sk.spec}）` : sk.name;
+    commandLines.push(`CCB<=${total} 【${label}】`);
+  });
+
+  // 能力値の×5ロールも、いあきゃらの出力例と同様に末尾へ追加する。
+  STAT_KEYS.forEach(k=>{
+    commandLines.push(`CCB<={${k}}*5 【${k} × 5】`);
+  });
+
+  const memoLines = identityMemoLines();
+  if(state.memo.free) memoLines.push(state.memo.free);
+
+  // 駒名はキャラクター名。
+  const charName = getCharacterName() || '無名の探索者';
+  const displayName = charName;
+
+  return {
+    kind:'character',
+    data:{
+      name: displayName,
+      memo: memoLines.join('\n'),
+      initiative: statTotal('DEX'),
+      externalUrl: '',
+      iconUrl: '',
+      commands: commandLines.join('\n'),
+      status: status,
+      params: params,
+    }
+  };
+}
+document.getElementById('ccfoliaBtn').addEventListener('click', async ()=>{
+  const payload = buildCcfoliaPayload();
+  const text = JSON.stringify(payload);
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('ココフォリア用データをコピーしました。ココフォリアの部屋の盤面上で貼り付け（Ctrl+V / Cmd+V）してください。');
+  }catch(err){
+    const blob = new Blob([text], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = (getCharacterName() || 'investigator') + '_ccfolia.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    alert('クリップボードにコピーできなかったため、JSONファイルをダウンロードしました。');
+  }
+});
+document.getElementById('importFile').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = evt=>{
+    try{
+      const data = JSON.parse(evt.target.result);
+      state = Object.assign({}, state, data);
+      state.viewMode = true;
+      state.sanManual = true;
+      state.identity = Object.assign({}, state.identity||{});
+      state.stats = Object.assign({}, Object.fromEntries(STAT_KEYS.map(k=>[k,{base:(STAT_META[k].fixed!==undefined?STAT_META[k].fixed:0),inc:0,temp:0}])), state.stats||{});
+      state.hpAdj = Object.assign({inc:0,temp:0}, state.hpAdj||{});
+      state.mpAdj = Object.assign({inc:0,temp:0}, state.mpAdj||{});
+      state.memo = Object.assign({custom:[]}, state.memo||{});
+      unlockedMemos.clear();
+      ensureMemoArraysForType();
+      if(!state.skills || !state.skills.length){
+        state.skills = DEFAULT_SKILLS.map((s,i)=>({id:'s'+i, cat:s.cat, name:s.name, spec:s.spec?'':undefined, specHint:s.specHint||'', formula:s.formula||null, base:s.base!==undefined?s.base:0, occ:0, int:0, growth:0, other:0}));
+      }
+      hydrateFromState();
+    }catch(err){
+      alert('ファイルの読み込みに失敗しました。正しいJSONファイルか確認してください。');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+document.addEventListener('keydown', e=>{
+  if((e.key==='ArrowUp'||e.key==='ArrowDown') && e.target.classList && e.target.classList.contains('no-spin')){
+    e.preventDefault();
+  }
+});
+document.addEventListener('wheel', e=>{
+  if(document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('no-spin')){
+    document.activeElement.blur();
+  }
+}, {passive:true});
+
+function hydrateFromState(){
+  document.getElementById('hp-inc').value = state.hpAdj.inc||0;
+  document.getElementById('hp-temp').value = state.hpAdj.temp||0;
+  document.getElementById('mp-inc').value = state.mpAdj.inc||0;
+  document.getElementById('mp-temp').value = state.mpAdj.temp||0;
+  recalcAll();
+  applyViewMode();
+  recalcOccPool(false);
+}
+hydrateFromState();
+</script>
+</body>
+</html>
