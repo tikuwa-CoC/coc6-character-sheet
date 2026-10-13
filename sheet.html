@@ -109,6 +109,18 @@ body{
 .san-input{width:44px;font-family:var(--font-mono);font-size:18px;font-weight:700;border:none;border-bottom:1px solid var(--line);text-align:right;background:transparent;color:var(--accent-deep);}
 
 .pools{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
+.featured-skill-card{
+  border:1px solid var(--accent);border-radius:6px;padding:12px 14px;margin-bottom:16px;
+  background:var(--accent-soft);display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.featured-skill-name{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--accent-deep);}
+.featured-skill-fields{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+.featured-skill-fields label{display:flex;flex-direction:column;font-size:10px;color:var(--muted);gap:2px;}
+.featured-skill-fields input, .featured-skill-fields .base-auto, .featured-skill-fields .skill-total{
+  font-family:var(--font-mono);font-size:14px;
+}
+.featured-skill-fields input{border:1px solid var(--line);border-radius:3px;padding:4px 6px;width:50px;text-align:right;}
+.featured-skill-fields .base-auto, .featured-skill-fields .skill-total{font-weight:700;text-align:right;display:inline-block;}
 .pool{flex:1;min-width:240px;border:1px solid var(--line);border-radius:5px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:#FCFCFB;flex-wrap:wrap;gap:8px;}
 .pool .name{font-size:12px;color:var(--muted);}
 .pool select{margin-top:4px;font-size:11px;font-family:var(--font-mono);border:1px solid var(--line);border-radius:3px;}
@@ -128,7 +140,19 @@ body{
 .cat-add-row td{padding:8px 6px;}
 .skill-table.no-int-col .int-col{display:none;}
 .skill-name{display:flex;align-items:baseline;gap:3px;flex-wrap:wrap;}
+.growth-check{width:13px;height:13px;flex:none;align-self:center;cursor:pointer;margin-right:1px;}
 .skill-name .spec-input{width:64px;border:none;border-bottom:1px dashed var(--line);background:transparent;font-family:var(--font-body);font-size:12px;color:var(--muted);padding:1px 2px;}
+.spec-combo{display:inline-flex;align-items:center;border-bottom:1px dashed var(--line);}
+.spec-combo .spec-input{border:none;border-bottom:none;width:58px;}
+.spec-arrow-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;flex:none;}
+.spec-arrow-icon{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--accent);pointer-events:none;line-height:1;
+}
+.spec-choice-arrow{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;padding:0;margin:0;cursor:pointer;
+}
+.spec-choice-arrow option{font-size:12px;color:var(--ink);}
 .skill-name .spec-input:focus{border-color:var(--accent);color:var(--ink);}
 .skill-table input[type=number]{width:52px;font-family:var(--font-mono);font-size:16px;border:1px solid var(--line);border-radius:3px;padding:5px 6px;text-align:right;}
 .skill-table input[type=number]:focus{border-color:var(--accent);background:#fff;}
@@ -180,6 +204,18 @@ tr.skill-locked{opacity:.5;}
 .memo-section-body > textarea{min-height:90px;font-family:var(--font-body);font-size:13px;border:1px solid var(--line);border-radius:4px;padding:8px;background:#fff;resize:vertical;width:100%;}
 .wealth-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
 
+.memo-group > .memo-section-body{gap:10px;padding:10px;background:var(--bg);}
+.memo-group .memo-section{background:#fff;}
+.memo-group .memo-section summary{
+  font-size:13px;padding:8px 12px;background:transparent;border-bottom:1px solid var(--line-soft);color:var(--ink);
+}
+.memo-group .memo-section:not([open]) summary{border-bottom:none;}
+.kc-summary-label{display:flex;align-items:center;gap:6px;}
+.kc-checkbox{width:14px;height:14px;cursor:pointer;flex:none;}
+.memo-section.kc-active summary{background:#F0DFA0;color:var(--accent-deep);}
+.memo-group .memo-section.kc-active summary{background:#F0DFA0;}
+
+
 .entry-card{border:1px dashed var(--line);border-radius:5px;padding:12px;position:relative;display:flex;flex-direction:column;gap:8px;}
 .entry-card.locked-entry{background:var(--accent-soft);border-style:solid;border-color:var(--line);margin-bottom:10px;}
 .entry-card.locked-entry input:disabled, .entry-card.locked-entry textarea:disabled{
@@ -203,6 +239,8 @@ tr.skill-locked{opacity:.5;}
 
 .footerbar{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--line);flex-wrap:wrap;gap:10px;}
 .footerbar .note{font-size:11px;color:var(--muted);font-family:var(--font-mono);}
+.luck-toggle-wrap{display:none;font-size:12px;color:var(--muted);align-items:center;gap:5px;cursor:pointer;}
+.luck-toggle-wrap.enabled{display:flex;}
 @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
 </style>
 </head>
@@ -236,7 +274,8 @@ tr.skill-locked{opacity:.5;}
       <div class="vital"><div class="k">MP</div><div class="v" id="mpV">0</div></div>
       <div class="vital"><div class="k" id="sanVitalLabel">SAN</div><div class="v" id="sanV">0/0</div></div>
       <div class="vital"><div class="k">DB</div><div class="v" id="dbV" style="font-size:15px;">±0</div></div>
-      <div class="vital mov-vital"><div class="k">移動</div><div class="v" id="movV">0</div></div>
+      <div class="vital build-vital"><div class="k">ビルド</div><div class="v" id="buildV">0</div></div>
+      <div class="vital mov-vital"><div class="k" id="movVitalLabel">MOV</div><div class="v" id="movV">0</div></div>
       <div class="vital"><div class="k">アイデア</div><div class="v" id="ideaV">0%</div></div>
       <div class="vital"><div class="k">幸運</div><div class="v" id="luckV">0%</div></div>
       <div class="vital"><div class="k">知識</div><div class="v" id="knowV">0%</div></div>
@@ -252,7 +291,7 @@ tr.skill-locked{opacity:.5;}
   <section class="panel active" id="panel-stats">
     <h2>能力値</h2>
     <div class="stat-toolbar only-edit">
-      <button class="btn" id="rollAll">8能力値を一括ロール</button>
+      <button class="btn" id="rollAll">ランダム</button>
       <button class="btn outline" id="clearAll">クリア</button>
     </div>
     <div class="stats-grid" id="statsGrid"></div>
@@ -275,13 +314,41 @@ tr.skill-locked{opacity:.5;}
       <div class="derived-card">
         <div class="k" id="sanDerivedLabel">正気度（SAN）</div>
         <div class="v"><input type="number" id="san-current" class="san-input" value="0">/<span id="san-max">0</span></div>
-        <div class="hint">ストレス障害領域 <span id="san-indef">0</span></div>
+        <div class="hint"><span id="san-indef-label">不定領域</span> <span id="san-indef">0</span></div>
+      </div>
+      <div class="derived-card mov-card">
+        <div class="k" id="movDerivedLabel">MOV</div><div class="v" id="d-mov">0</div>
+        <div class="stat-adj only-edit mov-adj-field">
+          <label>修正<input type="number" id="mov-adj" value="0"></label>
+        </div>
       </div>
       <div class="derived-card"><div class="k">ダメージボーナス</div><div class="v" id="d-db">±0</div></div>
-      <div class="derived-card mov-card"><div class="k">移動</div><div class="v" id="d-mov">0</div></div>
-      <div class="derived-card"><div class="k">アイデア</div><div class="v" id="d-idea">0%</div></div>
-      <div class="derived-card"><div class="k">幸運</div><div class="v" id="d-luck">0%</div></div>
-      <div class="derived-card"><div class="k">知識</div><div class="v" id="d-know">0%</div></div>
+      <div class="derived-card build-card"><div class="k">ビルド</div><div class="v" id="d-build">0</div></div>
+      <div class="derived-card">
+        <div class="k">アイデア</div><div class="v" id="d-idea">0%</div>
+        <div class="stat-adj only-edit">
+          <label>増加分<input type="number" id="idea-inc" value="0"></label>
+          <label>一時的<input type="number" id="idea-temp" value="0"></label>
+        </div>
+      </div>
+      <div class="derived-card">
+        <div class="k">幸運</div><div class="v" id="d-luck">0%</div>
+        <div class="stat-adj only-edit luck-stat-field">
+          <label>基本値<input type="number" id="luck-stat-base" value="0"></label>
+          <button type="button" class="roll-btn" id="luck-stat-roll" style="align-self:flex-end;">ロール</button>
+        </div>
+        <div class="stat-adj only-edit">
+          <label>増加分<input type="number" id="luck-inc" value="0"></label>
+          <label>一時的<input type="number" id="luck-temp" value="0"></label>
+        </div>
+      </div>
+      <div class="derived-card">
+        <div class="k">知識</div><div class="v" id="d-know">0%</div>
+        <div class="stat-adj only-edit">
+          <label>増加分<input type="number" id="know-inc" value="0"></label>
+          <label>一時的<input type="number" id="know-temp" value="0"></label>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -289,6 +356,7 @@ tr.skill-locked{opacity:.5;}
     <h2>技能</h2>
 
     <div class="pools" id="poolsSection"></div>
+    <div id="featuredSkillBox"></div>
 
     <div class="skill-controls">
       <input class="search" id="skillSearch" placeholder="技能を検索…">
@@ -313,7 +381,10 @@ tr.skill-locked{opacity:.5;}
 
   <div class="footerbar">
     <div class="note">保存はJSONファイルの書き出し・読み込みで行います（ブラウザには保存されません）</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <label id="luckToggleWrap" class="luck-toggle-wrap">
+        <input type="checkbox" id="ccfoliaLuckToggle">幸運ダイスを出力
+      </label>
       <button class="btn outline" id="importBtn">読み込む</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
       <button class="btn outline" id="ccfoliaBtn">ココフォリア出力</button>
@@ -335,6 +406,7 @@ const SHEET_TYPES = {
     title:'6版現代探索者シート',
     sub:'クトゥルフ神話TRPG 6版 準拠 / 現代の探索者向けキャラクターシート作成ツール',
     sanLabel:'SAN', sanFullLabel:'正気度',
+    hasMovement:true, movFixed:8, movLabel:'移動', movAdjustable:false,
     ccfoliaTopSkills:['目星','聞き耳','図書館'],
     ccfoliaDamage:[{dice:'1d3',db:true},{dice:'1d4',db:true},{dice:'1d6',db:true}],
     statMeta:{
@@ -444,11 +516,119 @@ const SHEET_TYPES = {
       {key:'free', kind:'freeText', label:'メモ'},
     ],
   },
+  heian6: {
+    title:'平安京探索者シート',
+    sub:'クトゥルフ神話TRPG 6版 準拠 / 平安京の探索者向けキャラクターシート作成ツール',
+    sanLabel:'SAN', sanFullLabel:'正気度',
+    hasMovement:true, movFixed:8, movLabel:'移動', movAdjustable:false,
+    ccfoliaTopSkills:['目星','聞き耳','図書館'],
+    ccfoliaDamage:[{dice:'1d3',db:true},{dice:'1d4',db:true},{dice:'1d6',db:true}],
+    statMeta:{
+      STR:{jp:'筋力', n:3,d:6,plus:0}, CON:{jp:'体力', n:3,d:6,plus:0},
+      POW:{jp:'精神力', n:3,d:6,plus:0}, DEX:{jp:'敏捷性', n:3,d:6,plus:0},
+      APP:{jp:'外見', n:3,d:6,plus:0}, SIZ:{jp:'体格', n:2,d:6,plus:6},
+      INT:{jp:'知性', n:2,d:6,plus:6}, EDU:{jp:'教育', n:3,d:6,plus:3}
+    },
+    identityFields:[
+      {key:'furigana', type:'furigana', label:'ふりがな'},
+      {key:'name', type:'text', big:'name', label:'探索者名'},
+      {key:'imina', type:'text', label:'諱（本名）'},
+      {key:'occupation', type:'text', label:'職業'},
+      {key:'rank', type:'text', label:'官位・官職'},
+      {key:'age', type:'number', label:'年齢'},
+      {key:'gender', type:'text', label:'性別'},
+      {key:'height', type:'text', label:'身長'},
+      {key:'weight', type:'text', label:'体重'},
+      {key:'birthplace', type:'text', label:'出身'},
+      {key:'hair', type:'text', label:'髪の色'},
+      {key:'eye', type:'text', label:'瞳の色'},
+      {key:'skin', type:'text', label:'肌の色'},
+      {key:'birthday', type:'text', label:'誕生日'},
+    ],
+    breedOptions:null,
+    skillPointMode:'occ_int',
+    skillCategories:[
+      {key:'combat', label:'戦闘技能'},
+      {key:'explore', label:'探索技能'},
+      {key:'action', label:'行動技能'},
+      {key:'negotiate', label:'交渉技能'},
+      {key:'knowledge', label:'知識技能'},
+    ],
+    defaultSkills:[
+      {cat:'combat', name:'回避', formula:'DEXx2'},
+      {cat:'combat', name:'こぶし（パンチ）', base:50},
+      {cat:'combat', name:'けり', base:25},
+      {cat:'combat', name:'組み付き', base:25},
+      {cat:'combat', name:'頭突き', base:10},
+      {cat:'combat', name:'捕縛術', base:10},
+      {cat:'combat', name:'投擲', base:25},
+      {cat:'combat', name:'刀', base:15},
+      {cat:'combat', name:'長柄', base:15},
+      {cat:'combat', name:'棒', base:25},
+      {cat:'combat', name:'弓', base:10},
+
+      {cat:'explore', name:'応急手当', base:30},
+      {cat:'explore', name:'鍵開け', base:1},
+      {cat:'explore', name:'隠す', base:15},
+      {cat:'explore', name:'隠れる', base:10},
+      {cat:'explore', name:'聞き耳', base:25},
+      {cat:'explore', name:'忍び歩き', base:10},
+      {cat:'explore', name:'夢解き', base:1},
+      {cat:'explore', name:'追跡', base:10},
+      {cat:'explore', name:'登攀', base:40},
+      {cat:'explore', name:'図書館', base:25},
+      {cat:'explore', name:'目星', base:25},
+
+      {cat:'action', name:'運転（牛車）', base:20},
+      {cat:'action', name:'修理', base:20},
+      {cat:'action', name:'乗馬', base:5},
+      {cat:'action', name:'水泳', base:25},
+      {cat:'action', name:'製作', base:5, spec:true, specHint:''},
+      {cat:'action', name:'操船', base:1},
+      {cat:'action', name:'跳躍', base:25},
+      {cat:'action', name:'土地勘', base:20},
+      {cat:'action', name:'変装', base:1},
+
+      {cat:'negotiate', name:'言いくるめ', base:5},
+      {cat:'negotiate', name:'地位', base:15},
+      {cat:'negotiate', name:'説得', base:15},
+      {cat:'negotiate', name:'値切り', base:5},
+      {cat:'negotiate', name:'日本語', formula:'EDUx5'},
+      {cat:'negotiate', name:'ほかの言語', base:1, spec:true, specHint:''},
+
+      {cat:'knowledge', name:'医術', base:1},
+      {cat:'knowledge', name:'宗教知識', base:10},
+      {cat:'knowledge', name:'クトゥルフ神話', base:0},
+      {cat:'knowledge', name:'芸術', base:5, spec:true, specHint:''},
+      {cat:'knowledge', name:'和歌', base:5},
+      {cat:'knowledge', name:'算術', base:10},
+      {cat:'knowledge', name:'鑑定', base:1},
+      {cat:'knowledge', name:'漢文', base:1},
+      {cat:'knowledge', name:'洞察', base:5},
+      {cat:'knowledge', name:'地方知識', base:1},
+      {cat:'knowledge', name:'本草学', base:1},
+      {cat:'knowledge', name:'法律', base:5},
+      {cat:'knowledge', name:'歴史', base:20},
+    ],
+    memoSections:[
+      {key:'weapons', kind:'weapons', label:'武器', armorKey:'armor'},
+      {key:'gear', kind:'gear', label:'冒険の装備とその他の所持品'},
+      {key:'wealth', kind:'wealth', label:'収入と財産', fields:[
+        {key:'income',label:'年収'},{key:'cash',label:'手持ち現金'},
+        {key:'assets',label:'財産'},{key:'realestate',label:'家／屋敷／荘園'}
+      ]},
+      {key:'tomes', kind:'simpleList', label:'魔導書、呪文、アーティファクト', titleLabel:'名称'},
+      {key:'encounters', kind:'simpleList', label:'遭遇した超自然の存在', titleLabel:'名称'},
+      {key:'scenarios', kind:'simpleList', label:'通過したシナリオ', titleLabel:'名称'},
+      {key:'free', kind:'freeText', label:'メモ'},
+    ],
+  },
   cat6: {
-    title:'6版猫探索者シート',
+    title:'猫探索者シート',
     sub:'クトゥルフ神話TRPG 6版 準拠 / 猫の探索者向けキャラクターシート作成ツール',
-    sanLabel:'SEN', sanFullLabel:'知覚力',
-    hasMovement:true,
+    sanLabel:'SEN', sanFullLabel:'知覚力', indefLabel:'ストレス障害領域',
+    hpRound:'ceil',
+    hasMovement:true, movLabel:'移動', movAdjustable:false,
     ccfoliaTopSkills:['目星','聞き耳','嗅ぎ取り'],
     ccfoliaDamage:[{dice:'1d4',db:false},{dice:'1d3',db:true},{dice:'1d6',db:true},{dice:'2d3',db:true}],
     statMeta:{
@@ -607,6 +787,277 @@ const SHEET_TYPES = {
       {key:'free', kind:'freeText', label:'メモ'},
     ],
   },
+  modern7: {
+    title:'7版現代探索者シート',
+    sub:'クトゥルフ神話TRPG 7版 準拠 / 現代の探索者向けキャラクターシート作成ツール',
+    sanLabel:'SAN', sanFullLabel:'正気度',
+    hasMovement:true, hasBuild:true, dbTable:'7e', movLabel:'MOV', movAdjustable:true,
+    ccfoliaCmd:'CC', statRollMultiplier:1, luckToggleAvailable:true,
+    hiddenStatKeys:['LUK'],
+    hpDivisor:10, hpRound:'floor', mpDivisor:5, sanFromPow:1, percentileScale:true,
+    interestMultiplier:2,
+    occFormulaOptions:[
+      {value:'EDUx4', label:'EDU × 4（標準）'},
+      {value:'EDUx2+DEXx2', label:'EDU×2 + DEX×2'},
+      {value:'EDUx2+STRx2', label:'EDU×2 + STR×2'},
+      {value:'EDUx2+APPx2', label:'EDU×2 + APP×2'},
+      {value:'EDUx2+POWx2', label:'EDU×2 + POW×2'},
+    ],
+    featuredSkill:'信用',
+    ccfoliaTopSkills:['目星','聞き耳','図書館'],
+    ccfoliaDamage:[{dice:'1d3',db:true},{dice:'1d4',db:true},{dice:'1d6',db:true}],
+    statKeys:['STR','CON','POW','DEX','APP','SIZ','INT','EDU','LUK'],
+    statMeta:{
+      STR:{jp:'筋力', n:3,d:6,plus:0,mult:5}, CON:{jp:'体力', n:3,d:6,plus:0,mult:5},
+      POW:{jp:'精神力', n:3,d:6,plus:0,mult:5}, DEX:{jp:'敏捷性', n:3,d:6,plus:0,mult:5},
+      APP:{jp:'外見', n:3,d:6,plus:0,mult:5}, SIZ:{jp:'体格', n:2,d:6,plus:6,mult:5},
+      INT:{jp:'知性', n:2,d:6,plus:6,mult:5}, EDU:{jp:'教育', n:2,d:6,plus:6,mult:5},
+      LUK:{jp:'幸運', n:3,d:6,plus:0,mult:5}
+    },
+    identityFields:[
+      {key:'furigana', type:'furigana', label:'ふりがな'},
+      {key:'name', type:'text', big:'name', label:'探索者名'},
+      {key:'occupation', type:'text', label:'職業'},
+      {key:'age', type:'number', label:'年齢'},
+      {key:'gender', type:'text', label:'性別'},
+      {key:'height', type:'text', label:'身長'},
+      {key:'weight', type:'text', label:'体重'},
+      {key:'birthplace', type:'text', label:'出身'},
+      {key:'hair', type:'text', label:'髪の色'},
+      {key:'eye', type:'text', label:'瞳の色'},
+      {key:'skin', type:'text', label:'肌の色'},
+      {key:'birthday', type:'text', label:'誕生日'},
+    ],
+    breedOptions:null,
+    skillPointMode:'occ_int',
+    skillCategories:[
+      {key:'combat', label:'戦闘技能'},
+      {key:'explore', label:'探索技能'},
+      {key:'action', label:'行動技能'},
+      {key:'negotiate', label:'交渉技能'},
+      {key:'knowledge', label:'知識技能'},
+    ],
+    defaultSkills:[
+      {cat:'combat', name:'回避', formula:'DEX/2'},
+      {cat:'combat', name:'近接戦闘', base:25, specChoices:[
+        {label:'斧',base:15},{label:'格闘',base:25},{label:'絞殺ひも',base:15},{label:'チェーンソー',base:10},
+        {label:'刀剣',base:20},{label:'フレイル',base:10},{label:'むち',base:5},{label:'槍',base:20}
+      ]},
+      {cat:'combat', name:'投擲', base:20},
+      {cat:'combat', name:'射撃', base:0, specChoices:[
+        {label:'火炎放射器',base:10},{label:'拳銃',base:20},{label:'サブマシンガン',base:15},{label:'重火器',base:10},
+        {label:'マシンガン',base:10},{label:'弓',base:15},{label:'ライフル／ショットガン',base:25}
+      ]},
+
+      {cat:'explore', name:'応急手当', base:30},
+      {cat:'explore', name:'鍵開け', base:1},
+      {cat:'explore', name:'手さばき', base:10},
+      {cat:'explore', name:'聞き耳', base:20},
+      {cat:'explore', name:'隠密', base:20},
+      {cat:'explore', name:'精神分析', base:1},
+      {cat:'explore', name:'追跡', base:10},
+      {cat:'explore', name:'登攀', base:20},
+      {cat:'explore', name:'図書館', base:20},
+      {cat:'explore', name:'目星', base:25},
+      {cat:'explore', name:'鑑定', base:5},
+
+      {cat:'action', name:'運転', base:20, spec:true, specHint:''},
+      {cat:'action', name:'機械修理', base:10},
+      {cat:'action', name:'重機械操作', base:1},
+      {cat:'action', name:'乗馬', base:5},
+      {cat:'action', name:'水泳', base:20},
+      {cat:'action', name:'芸術／製作', base:5, spec:true, specHint:''},
+      {cat:'action', name:'操縦', base:1, spec:true, specHint:''},
+      {cat:'action', name:'跳躍', base:20},
+      {cat:'action', name:'電気修理', base:10},
+      {cat:'action', name:'ナビゲート', base:10},
+      {cat:'action', name:'変装', base:5},
+
+      {cat:'negotiate', name:'言いくるめ', base:5},
+      {cat:'negotiate', name:'信用', base:0},
+      {cat:'negotiate', name:'説得', base:10},
+      {cat:'negotiate', name:'母国語', formula:'EDU', spec:true, specHint:''},
+      {cat:'negotiate', name:'威圧', base:15},
+      {cat:'negotiate', name:'魅惑', base:15},
+      {cat:'negotiate', name:'言語', base:1, spec:true, specHint:''},
+
+      {cat:'knowledge', name:'医学', base:1},
+      {cat:'knowledge', name:'オカルト', base:5},
+      {cat:'knowledge', name:'クトゥルフ神話', base:0},
+      {cat:'knowledge', name:'経理', base:5},
+      {cat:'knowledge', name:'考古学', base:1},
+      {cat:'knowledge', name:'コンピュータ', base:5},
+      {cat:'knowledge', name:'科学', base:1, specChoices:[
+        {label:'暗号学',base:1},{label:'化学',base:1},{label:'気象学',base:1},{label:'工学',base:1},
+        {label:'植物学',base:1},{label:'数学',base:10},{label:'生物学',base:1},{label:'地質学',base:1},
+        {label:'天文学',base:1},{label:'動物学',base:1},{label:'物理学',base:1},{label:'法医学',base:1},{label:'薬学',base:1}
+      ]},
+      {cat:'knowledge', name:'心理学', base:10},
+      {cat:'knowledge', name:'人類学', base:1},
+      {cat:'knowledge', name:'電子工学', base:1},
+      {cat:'knowledge', name:'自然', base:10},
+      {cat:'knowledge', name:'法律', base:5},
+      {cat:'knowledge', name:'歴史', base:5},
+      {cat:'knowledge', name:'サバイバル', base:10, spec:true, specHint:''},
+    ],
+    memoSections:[
+      {key:'weapons', kind:'weapons', label:'武器'},
+      {key:'gear', kind:'gear', label:'装備と所持品'},
+      {key:'wealth', kind:'wealth', label:'収入と財産', fields:[
+        {key:'expenseLevel',label:'支出レベル'},{key:'cash',label:'現金'},{key:'assets',label:'資産'}
+      ]},
+      {key:'backstoryGroup', kind:'group', label:'バックストーリー', children:[
+        {key:'appearance', kind:'freeText', label:'容姿の描写', keyConnectable:true},
+        {key:'ideology', kind:'freeText', label:'イデオロギー／信念', keyConnectable:true},
+        {key:'people', kind:'freeText', label:'重要な人々', keyConnectable:true},
+        {key:'places', kind:'freeText', label:'意味のある場所', keyConnectable:true},
+        {key:'possessions', kind:'freeText', label:'秘蔵の品', keyConnectable:true},
+        {key:'traits', kind:'freeText', label:'特徴', keyConnectable:true},
+        {key:'injuries', kind:'freeText', label:'負傷、傷跡', keyConnectable:true},
+        {key:'phobias', kind:'freeText', label:'恐怖症、マニア', keyConnectable:true},
+        {key:'tomes', kind:'simpleList', label:'魔導書、呪文、アーティファクト', titleLabel:'名称', keyConnectable:true},
+        {key:'encounters', kind:'simpleList', label:'遭遇した超自然の存在', titleLabel:'名称', keyConnectable:true},
+      ]},
+      {key:'scenarios', kind:'simpleList', label:'通過したシナリオ', titleLabel:'名称'},
+      {key:'free', kind:'freeText', label:'メモ'},
+    ],
+  },
+  junior7: {
+    title:'年少探索者シート',
+    sub:'クトゥルフ神話TRPG 7版 準拠 / 年少の探索者向けキャラクターシート作成ツール',
+    sanLabel:'SAN', sanFullLabel:'正気度', ageBasedStats:true,
+    hasMovement:true, hasBuild:true, dbTable:'7e', movLabel:'MOV', movAdjustable:true,
+    ccfoliaCmd:'CC', statRollMultiplier:1, luckToggleAvailable:true,
+    hiddenStatKeys:['LUK'],
+    hpDivisor:10, hpRound:'floor', mpDivisor:5, sanFromPow:1, percentileScale:true,
+    interestMultiplier:2,
+    occFormulaOptions:[
+      {value:'EDUx4', label:'EDU × 4（標準）'},
+      {value:'EDUx2+DEXx2', label:'EDU×2 + DEX×2'},
+      {value:'EDUx2+STRx2', label:'EDU×2 + STR×2'},
+      {value:'EDUx2+APPx2', label:'EDU×2 + APP×2'},
+      {value:'EDUx2+POWx2', label:'EDU×2 + POW×2'},
+    ],
+    featuredSkill:'信用',
+    ccfoliaTopSkills:['目星','聞き耳','図書館'],
+    ccfoliaDamage:[{dice:'1d3',db:true},{dice:'1d4',db:true},{dice:'1d6',db:true}],
+    statKeys:['STR','CON','POW','DEX','APP','SIZ','INT','EDU','LUK'],
+    statMeta:{
+      STR:{jp:'筋力', n:3,d:4,plus:0,mult:5}, CON:{jp:'体力', n:3,d:4,plus:0,mult:5},
+      POW:{jp:'精神力', n:3,d:6,plus:0,mult:5}, DEX:{jp:'敏捷性', n:3,d:6,plus:0,mult:5},
+      APP:{jp:'外見', n:3,d:6,plus:0,mult:5}, SIZ:{jp:'体格', n:2,d:3,plus:6,mult:5},
+      INT:{jp:'知性', n:2,d:6,plus:6,mult:5}, EDU:{jp:'教育', fixed:5},
+      LUK:{jp:'幸運', n:3,d:6,plus:0,mult:5}
+    },
+    identityFields:[
+      {key:'furigana', type:'furigana', label:'ふりがな'},
+      {key:'name', type:'text', big:'name', label:'探索者名'},
+      {key:'occupation', type:'text', label:'職業'},
+      {key:'age', type:'juniorAge', label:'年齢'},
+      {key:'grade', type:'text', label:'学年'},
+      {key:'gender', type:'text', label:'性別'},
+      {key:'height', type:'text', label:'身長'},
+      {key:'weight', type:'text', label:'体重'},
+      {key:'birthplace', type:'text', label:'出身'},
+      {key:'hair', type:'text', label:'髪の色'},
+      {key:'eye', type:'text', label:'瞳の色'},
+      {key:'skin', type:'text', label:'肌の色'},
+      {key:'birthday', type:'text', label:'誕生日'},
+    ],
+    breedOptions:null,
+    skillPointMode:'occ_int',
+    skillCategories:[
+      {key:'combat', label:'戦闘技能'},
+      {key:'explore', label:'探索技能'},
+      {key:'action', label:'行動技能'},
+      {key:'negotiate', label:'交渉技能'},
+      {key:'knowledge', label:'知識技能'},
+    ],
+    defaultSkills:[
+      {cat:'combat', name:'回避', formula:'DEX/2'},
+      {cat:'combat', name:'近接戦闘', base:25, specChoices:[
+        {label:'斧',base:15},{label:'格闘',base:25},{label:'絞殺ひも',base:15},{label:'チェーンソー',base:10},
+        {label:'刀剣',base:20},{label:'フレイル',base:10},{label:'むち',base:5},{label:'槍',base:20}
+      ]},
+      {cat:'combat', name:'投擲', base:20},
+      {cat:'combat', name:'射撃', base:0, specChoices:[
+        {label:'火炎放射器',base:10},{label:'拳銃',base:20},{label:'サブマシンガン',base:15},{label:'重火器',base:10},
+        {label:'マシンガン',base:10},{label:'弓',base:15},{label:'ライフル／ショットガン',base:25}
+      ]},
+
+      {cat:'explore', name:'応急手当', base:30},
+      {cat:'explore', name:'鍵開け', base:1},
+      {cat:'explore', name:'手さばき', base:10},
+      {cat:'explore', name:'聞き耳', base:20},
+      {cat:'explore', name:'隠密', base:20},
+      {cat:'explore', name:'精神分析', base:1},
+      {cat:'explore', name:'追跡', base:10},
+      {cat:'explore', name:'登攀', base:20},
+      {cat:'explore', name:'図書館', base:20},
+      {cat:'explore', name:'目星', base:25},
+      {cat:'explore', name:'鑑定', base:5},
+
+      {cat:'action', name:'運転', base:20, spec:true, specHint:''},
+      {cat:'action', name:'機械修理', base:10},
+      {cat:'action', name:'重機械操作', base:1},
+      {cat:'action', name:'乗馬', base:5},
+      {cat:'action', name:'水泳', base:20},
+      {cat:'action', name:'芸術／製作', base:5, spec:true, specHint:''},
+      {cat:'action', name:'操縦', base:1, spec:true, specHint:''},
+      {cat:'action', name:'跳躍', base:20},
+      {cat:'action', name:'電気修理', base:10},
+      {cat:'action', name:'ナビゲート', base:10},
+      {cat:'action', name:'変装', base:5},
+
+      {cat:'negotiate', name:'言いくるめ', base:5},
+      {cat:'negotiate', name:'信用', base:0},
+      {cat:'negotiate', name:'説得', base:10},
+      {cat:'negotiate', name:'母国語', formula:'EDU', spec:true, specHint:''},
+      {cat:'negotiate', name:'威圧', base:15},
+      {cat:'negotiate', name:'魅惑', base:15},
+      {cat:'negotiate', name:'言語', base:1, spec:true, specHint:''},
+
+      {cat:'knowledge', name:'医学', base:1},
+      {cat:'knowledge', name:'オカルト', base:5},
+      {cat:'knowledge', name:'クトゥルフ神話', base:0},
+      {cat:'knowledge', name:'経理', base:5},
+      {cat:'knowledge', name:'考古学', base:1},
+      {cat:'knowledge', name:'コンピュータ', base:5},
+      {cat:'knowledge', name:'科学', base:1, specChoices:[
+        {label:'暗号学',base:1},{label:'化学',base:1},{label:'気象学',base:1},{label:'工学',base:1},
+        {label:'植物学',base:1},{label:'数学',base:10},{label:'生物学',base:1},{label:'地質学',base:1},
+        {label:'天文学',base:1},{label:'動物学',base:1},{label:'物理学',base:1},{label:'法医学',base:1},{label:'薬学',base:1}
+      ]},
+      {cat:'knowledge', name:'心理学', base:10},
+      {cat:'knowledge', name:'人類学', base:1},
+      {cat:'knowledge', name:'電子工学', base:1},
+      {cat:'knowledge', name:'自然', base:10},
+      {cat:'knowledge', name:'法律', base:5},
+      {cat:'knowledge', name:'歴史', base:5},
+      {cat:'knowledge', name:'サバイバル', base:10, spec:true, specHint:''},
+    ],
+    memoSections:[
+      {key:'weapons', kind:'weapons', label:'武器'},
+      {key:'gear', kind:'gear', label:'装備と所持品'},
+      {key:'wealth', kind:'wealth', label:'収入と財産', fields:[
+        {key:'expenseLevel',label:'支出レベル'},{key:'cash',label:'現金'},{key:'assets',label:'資産'}
+      ]},
+      {key:'backstoryGroup', kind:'group', label:'バックストーリー', children:[
+        {key:'appearance', kind:'freeText', label:'容姿の描写', keyConnectable:true},
+        {key:'ideology', kind:'freeText', label:'イデオロギー／信念', keyConnectable:true},
+        {key:'people', kind:'freeText', label:'重要な人々', keyConnectable:true},
+        {key:'places', kind:'freeText', label:'意味のある場所', keyConnectable:true},
+        {key:'possessions', kind:'freeText', label:'秘蔵の品', keyConnectable:true},
+        {key:'traits', kind:'freeText', label:'特徴', keyConnectable:true},
+        {key:'injuries', kind:'freeText', label:'負傷、傷跡', keyConnectable:true},
+        {key:'phobias', kind:'freeText', label:'恐怖症、マニア', keyConnectable:true},
+        {key:'tomes', kind:'simpleList', label:'魔導書、呪文、アーティファクト', titleLabel:'名称', keyConnectable:true},
+        {key:'encounters', kind:'simpleList', label:'遭遇した超自然の存在', titleLabel:'名称', keyConnectable:true},
+      ]},
+      {key:'scenarios', kind:'simpleList', label:'通過したシナリオ', titleLabel:'名称'},
+      {key:'free', kind:'freeText', label:'メモ'},
+    ],
+  },
 };
 const urlParams = new URLSearchParams(location.search);
 const sheetTypeKey = SHEET_TYPES[urlParams.get('type')] ? urlParams.get('type') : 'modern6';
@@ -617,11 +1068,29 @@ document.getElementById('pageSub').textContent = sheetType.sub;
 document.getElementById('sanBadgeLabel').textContent = sheetType.sanFullLabel;
 document.getElementById('sanVitalLabel').textContent = sheetType.sanLabel;
 document.getElementById('sanDerivedLabel').textContent = `${sheetType.sanFullLabel}（${sheetType.sanLabel}）`;
+document.getElementById('san-indef-label').textContent = sheetType.indefLabel || '不定領域';
 if(!sheetType.hasMovement){
   document.querySelectorAll('.mov-vital, .mov-card').forEach(el=> el.style.display='none');
+} else {
+  const movLabel = sheetType.movLabel || 'MOV';
+  document.getElementById('movVitalLabel').textContent = movLabel;
+  document.getElementById('movDerivedLabel').textContent = movLabel;
+  if(!sheetType.movAdjustable){
+    document.querySelectorAll('.mov-adj-field').forEach(el=> el.style.display='none');
+  }
+}
+if(!sheetType.hasBuild){
+  document.querySelectorAll('.build-card, .build-vital').forEach(el=> el.style.display='none');
+}
+const hasLuckStatGlobal = !!(sheetType.statKeys && sheetType.statKeys.includes('LUK'));
+if(!hasLuckStatGlobal){
+  document.querySelectorAll('.luck-stat-field').forEach(el=> el.style.display='none');
+}
+if(sheetType.luckToggleAvailable){
+  document.getElementById('luckToggleWrap').classList.add('enabled');
 }
 
-const STAT_KEYS = ['STR','CON','POW','DEX','APP','SIZ','INT','EDU'];
+const STAT_KEYS = sheetType.statKeys || ['STR','CON','POW','DEX','APP','SIZ','INT','EDU'];
 const STAT_META = sheetType.statMeta;
 
 const IDENTITY_FIELDS = sheetType.identityFields;
@@ -630,6 +1099,7 @@ const SKILL_CATEGORIES = sheetType.skillCategories;
 const DEFAULT_SKILLS = sheetType.defaultSkills;
 
 function freshWeapon(){ return {id:'w'+Date.now()+Math.random().toString(36).slice(2,6), name:'', success:'', damage:'', range:'', attacks:'', ammo:'', durability:'', malfunction:'', other:''}; }
+function freshArmor(){ return {id:'a'+Date.now()+Math.random().toString(36).slice(2,6), name:'', part:'', damageReduction:''}; }
 function freshGear(){ return {id:'g'+Date.now()+Math.random().toString(36).slice(2,6), name:'', type:'', qty:'', price:'', note:''}; }
 function freshEntry(){ return {id:'i'+Date.now()+Math.random().toString(36).slice(2,6), title:'', note:''}; }
 function freshRelation(){ return {id:'r'+Date.now()+Math.random().toString(36).slice(2,6), kind:'ally', title:'', note:''}; }
@@ -640,27 +1110,34 @@ let state = {
   identity: {},
   stats: Object.fromEntries(STAT_KEYS.map(k=>[k,{base:(STAT_META[k].fixed!==undefined?STAT_META[k].fixed:0),inc:0,temp:0}])),
   hpAdj:{inc:0,temp:0}, mpAdj:{inc:0,temp:0}, sanCurrent:null, sanManual:false,
-  occFormula: sheetType.skillPointMode==='single' ? 'EDUplusINTx5' : 'EDUx20',
+  ideaAdj:{inc:0,temp:0}, knowAdj:{inc:0,temp:0}, luckAdj:{inc:0,temp:0}, movAdj:0,
+  occFormula: sheetType.skillPointMode==='single' ? 'EDUplusINTx5' : (sheetType.occFormulaOptions ? sheetType.occFormulaOptions[0].value : 'EDUx20'),
   occCustom:0, occCorrection:0, intCorrection:0,
   skills: DEFAULT_SKILLS.map((s,i)=>({
-    id:'s'+i, cat:s.cat, name:s.name, spec:s.spec?'':undefined, specHint:s.specHint||'',
-    formula:s.formula||null, base:s.base!==undefined?s.base:0, occ:0, int:0, growth:0, other:0,
-    requiresBreed:s.requiresBreed||null
+    id:'s'+i, cat:s.cat, name:s.name, spec:(s.spec||s.specChoices)?'':undefined, specHint:s.specHint||'',
+    formula:s.formula||null, base:s.base!==undefined?s.base:0, baseDefault:s.base!==undefined?s.base:0,
+    occ:0, int:0, growth:0, other:0,
+    requiresBreed:s.requiresBreed||null, growthCheck:false,
+    specChoices:s.specChoices||null, specChoice:''
   })),
   memo:{ custom:[] }
 };
 function ensureMemoArraysForType(){
-  sheetType.memoSections.forEach(sec=>{
+  function initSection(sec){
+    if(sec.kind==='group'){ (sec.children||[]).forEach(initSection); return; }
     if(sec.kind==='weapons' || sec.kind==='gear' || sec.kind==='simpleList' || sec.kind==='enemyAllyList' || sec.kind==='tricks'){
       if(!Array.isArray(state.memo[sec.key])) state.memo[sec.key] = [];
+      if(sec.kind==='weapons' && sec.armorKey && !Array.isArray(state.memo[sec.armorKey])) state.memo[sec.armorKey] = [];
     } else if(sec.kind==='wealth'){
       if(!state.memo[sec.key] || typeof state.memo[sec.key]!=='object' || Array.isArray(state.memo[sec.key])) state.memo[sec.key] = {};
       sec.fields.forEach(f=>{ if(state.memo[sec.key][f.key]===undefined) state.memo[sec.key][f.key]=''; });
     } else if(sec.kind==='freeText'){
       if(typeof state.memo[sec.key]!=='string') state.memo[sec.key]='';
     }
-  });
+  }
+  sheetType.memoSections.forEach(initSection);
   if(!Array.isArray(state.memo.custom)) state.memo.custom = [];
+  if(!state.memo.keyConnections || typeof state.memo.keyConnections!=='object') state.memo.keyConnections = {};
 }
 ensureMemoArraysForType();
 
@@ -668,6 +1145,7 @@ function rollDice(n,d,plus){ let t=plus||0; for(let i=0;i<n;i++) t += 1+Math.flo
 function rollStat(formula){
   if(formula.fixed!==undefined) return formula.fixed;
   let v = rollDice(formula.n, formula.d, formula.plus||0);
+  if(formula.mult) v = v*formula.mult;
   if(formula.min!==undefined && v<formula.min) v = formula.min;
   return v;
 }
@@ -693,7 +1171,17 @@ function getBreedMovMod(){
   const breed = sheetType.breedData[state.identity && state.identity.breed];
   return (breed && breed.movMod) ? breed.movMod : 0;
 }
-function movTotal(){ return 12 + getBreedMovMod(); }
+function movTotal(){
+  if(sheetTypeKey==='cat6') return 12 + getBreedMovMod();
+  if(sheetType.movFixed!==undefined) return sheetType.movFixed;
+  if(sheetType.hasMovement){
+    const str=statTotal('STR'), dex=statTotal('DEX'), siz=statTotal('SIZ');
+    if(str<siz && dex<siz) return 7;
+    if(str>=siz && dex>=siz) return 9;
+    return 8;
+  }
+  return 0;
+}
 document.getElementById('fileNo').textContent = 'FILE No. ' + Math.floor(1000+Math.random()*8999);
 
 function breedInfoHtml(val){
@@ -791,6 +1279,21 @@ function renderIdentity(){
       identitySection.appendChild(div);
       return;
     }
+    if(f.type==='juniorAge'){
+      const div = document.createElement('div'); div.className='field';
+      const val = state.identity[f.key]||'';
+      const presetAges = ['7','8','9','10','11','12','13','14'];
+      const options = presetAges.map(a=>`<option value="${a}" ${val===a?'selected':''}>${a}歳</option>`).join('');
+      div.innerHTML = `
+        <label>${f.label}</label>
+        <select data-juniorage="${f.key}" ${dis}>
+          <option value="">未選択</option>
+          ${options}
+        </select>
+      `;
+      identitySection.appendChild(div);
+      return;
+    }
     const div = document.createElement('div'); div.className='field';
     div.innerHTML = `<label>${f.label}</label><input data-key="${f.key}" type="${f.type==='number'?'number':'text'}" value="${state.identity[f.key]||''}" ${dis}>`;
     identitySection.appendChild(div);
@@ -816,18 +1319,43 @@ identitySection.addEventListener('change', e=>{
     }
     syncBreedEffects(state.identity[key]);
   }
+  if(e.target.matches('[data-juniorage]')){
+    const key = e.target.dataset.juniorage;
+    state.identity[key] = e.target.value;
+    syncAgeStats();
+    renderStatsGrid();
+    recalcAll();
+  }
 });
 
 /* ---------------- 能力値タブ ---------------- */
+function getStatFormula(key){
+  if(sheetType.ageBasedStats && (key==='STR' || key==='CON' || key==='SIZ' || key==='EDU')){
+    const age = parseInt(state.identity && state.identity.age) || 7;
+    if(key==='STR') return age>=13 ? {jp:'筋力', n:2,d:6,plus:1,mult:5} : {jp:'筋力', n:3,d:4,plus:0,mult:5};
+    if(key==='CON') return age>=13 ? {jp:'体力', n:2,d:6,plus:1,mult:5} : {jp:'体力', n:3,d:4,plus:0,mult:5};
+    if(key==='SIZ') return age>=13 ? {jp:'体格', n:2,d:4,plus:6,mult:5} : {jp:'体格', n:2,d:3,plus:6,mult:5};
+    if(key==='EDU') return {jp:'教育', fixed: Math.max(0,(age-6))*5};
+  }
+  return STAT_META[key];
+}
+function syncAgeStats(){
+  if(!sheetType.ageBasedStats) return;
+  const eduFormula = getStatFormula('EDU');
+  if(eduFormula.fixed!==undefined) state.stats.EDU.base = eduFormula.fixed;
+}
+
 const statsGrid = document.getElementById('statsGrid');
 function renderStatsGrid(){
   statsGrid.innerHTML = '';
   const dis = state.viewMode ? 'disabled' : '';
+  const hidden = sheetType.hiddenStatKeys || [];
   STAT_KEYS.forEach(key=>{
-    const m = STAT_META[key], st = state.stats[key];
+    if(hidden.includes(key)) return;
+    const m = getStatFormula(key), st = state.stats[key];
     const card = document.createElement('div');
     card.className='stat-card';
-    const formulaText = m.fixed!==undefined ? '固定値' : `${m.n}D${m.d}${m.plus?('+'+m.plus):''}${m.min?`（最低${m.min}）`:''}`;
+    const formulaText = m.fixed!==undefined ? '固定値' : `${m.n}D${m.d}${m.plus?('+'+m.plus):''}${m.mult?('×'+m.mult):''}${m.min?`（最低${m.min}）`:''}`;
     const rollBtn = m.fixed!==undefined ? '' : `<button type="button" class="roll-btn only-edit" data-roll="${key}">ロール</button>`;
     card.innerHTML = `
       <div class="label"><b>${key}</b><span class="jp">${m.jp}</span></div>
@@ -853,68 +1381,123 @@ statsGrid.addEventListener('input', e=>{
 });
 statsGrid.addEventListener('click', e=>{
   if(e.target.matches('[data-roll]')){
-    const key = e.target.dataset.roll, m = STAT_META[key];
+    const key = e.target.dataset.roll, m = getStatFormula(key);
     state.stats[key].base = rollStat(m);
     renderStatsGrid(); recalcAll();
   }
 });
 document.getElementById('rollAll').addEventListener('click', ()=>{
-  STAT_KEYS.forEach(key=>{ state.stats[key].base = rollStat(STAT_META[key]); });
+  STAT_KEYS.forEach(key=>{ state.stats[key].base = rollStat(getStatFormula(key)); });
   renderStatsGrid(); recalcAll();
 });
 document.getElementById('clearAll').addEventListener('click', ()=>{
-  STAT_KEYS.forEach(key=> state.stats[key].base = (STAT_META[key].fixed!==undefined ? STAT_META[key].fixed : 0));
+  STAT_KEYS.forEach(key=> state.stats[key].base = (getStatFormula(key).fixed!==undefined ? getStatFormula(key).fixed : 0));
   renderStatsGrid(); recalcAll();
 });
 
 /* ---------------- 派生ステータス ---------------- */
-function dbFromSum(sum){
-  if(sum<=12) return '-1D6'; if(sum<=16) return '-1D4'; if(sum<=24) return '±0';
-  if(sum<=32) return '+1D4'; if(sum<=40) return '+1D6'; if(sum<=56) return '+2D6';
-  if(sum<=72) return '+3D6'; if(sum<=88) return '+4D6';
-  return '+' + (4+Math.ceil((sum-88)/16)) + 'D6';
+function dbFromSum6e(sum){
+  if(sum<=12) return {db:'-1D6', build:null}; if(sum<=16) return {db:'-1D4', build:null}; if(sum<=24) return {db:'±0', build:null};
+  if(sum<=32) return {db:'+1D4', build:null}; if(sum<=40) return {db:'+1D6', build:null}; if(sum<=56) return {db:'+2D6', build:null};
+  if(sum<=72) return {db:'+3D6', build:null}; if(sum<=88) return {db:'+4D6', build:null};
+  return {db:'+' + (4+Math.ceil((sum-88)/16)) + 'D6', build:null};
 }
-function hpBase(){ return Math.ceil((statTotal('CON')+statTotal('SIZ'))/2); }
+function dbBuild7e(sum){
+  if(sum<=64) return {db:'-2', build:-2};
+  if(sum<=84) return {db:'-1', build:-1};
+  if(sum<=124) return {db:'±0', build:0};
+  if(sum<=164) return {db:'+1D4', build:1};
+  if(sum<=204) return {db:'+1D6', build:2};
+  if(sum<=284) return {db:'+2D6', build:3};
+  if(sum<=364) return {db:'+3D6', build:4};
+  if(sum<=444) return {db:'+4D6', build:5};
+  const extra = Math.ceil((sum-444)/80);
+  return {db:'+' + (4+extra) + 'D6', build:5+extra};
+}
+function computeDamage(sum){
+  return sheetType.dbTable==='7e' ? dbBuild7e(sum) : dbFromSum6e(sum);
+}
+function hpBase(){
+  const raw = (statTotal('CON')+statTotal('SIZ')) / (sheetType.hpDivisor||2);
+  return sheetType.hpRound==='ceil' ? Math.ceil(raw) : Math.floor(raw);
+}
 function hpTotal(){ return hpBase() + (state.hpAdj.inc||0) + (state.hpAdj.temp||0); }
-function mpBase(){ return statTotal('POW'); }
+function mpBase(){ return Math.floor(statTotal('POW') / (sheetType.mpDivisor||1)); }
 function mpTotal(){ return mpBase() + (state.mpAdj.inc||0) + (state.mpAdj.temp||0); }
 
 function recalcAll(){
   STAT_KEYS.forEach(key=>{ const el=document.getElementById(key+'-total'); if(el) el.textContent = statTotal(key); });
 
   const hp = hpTotal(), mp = mpTotal();
-  const sanMax = Math.min(99, statTotal('POW')*5);
+  const sanMax = Math.min(99, statTotal('POW')*(sheetType.sanFromPow!==undefined?sheetType.sanFromPow:5));
   if(state.sanCurrent===null || !state.sanManual) state.sanCurrent = sanMax;
   const sanCur = state.sanCurrent;
   const indef = Math.max(0, sanCur - Math.ceil(sanCur/5));
-  const db = dbFromSum(statTotal('STR')+statTotal('SIZ'));
-  const idea = statTotal('INT')*5, luck = statTotal('POW')*5, know = statTotal('EDU')*5;
+  const dmg = computeDamage(statTotal('STR')+statTotal('SIZ'));
+  const db = dmg.db;
+  const scaleMul = sheetType.percentileScale ? 1 : 5;
+  const hasLuckStat = !!(sheetType.statKeys && sheetType.statKeys.includes('LUK'));
+  const idea = statTotal('INT')*scaleMul + (state.ideaAdj.inc||0) + (state.ideaAdj.temp||0);
+  const know = statTotal('EDU')*scaleMul + (state.knowAdj.inc||0) + (state.knowAdj.temp||0);
+  const luckAutoBase = hasLuckStat ? statTotal('LUK') : statTotal('POW')*scaleMul;
+  const luck = luckAutoBase + (state.luckAdj.inc||0) + (state.luckAdj.temp||0);
+  const mov = movTotal() + (state.movAdj||0);
 
   document.getElementById('d-hp').textContent = hp;
   document.getElementById('d-mp').textContent = mp;
   document.getElementById('san-max').textContent = sanMax;
   document.getElementById('san-indef').textContent = indef;
   document.getElementById('d-db').textContent = db;
-  document.getElementById('d-mov').textContent = movTotal();
+  document.getElementById('d-mov').textContent = mov;
   document.getElementById('d-idea').textContent = idea+'%';
   document.getElementById('d-luck').textContent = luck+'%';
   document.getElementById('d-know').textContent = know+'%';
+  const dBuildEl = document.getElementById('d-build');
+  const buildText = dmg.build===null ? '－' : (dmg.build>0?'+':'')+dmg.build;
+  if(dBuildEl) dBuildEl.textContent = buildText;
+  const buildVEl = document.getElementById('buildV');
+  if(buildVEl) buildVEl.textContent = buildText;
 
   const sanCurEl = document.getElementById('san-current');
   if(document.activeElement!==sanCurEl) sanCurEl.value = sanCur;
+  if(hasLuckStat){
+    const luckStatBaseEl = document.getElementById('luck-stat-base');
+    if(luckStatBaseEl && document.activeElement!==luckStatBaseEl) luckStatBaseEl.value = state.stats.LUK.base||0;
+  }
 
   document.getElementById('hpV').textContent = hp;
   document.getElementById('mpV').textContent = mp;
   document.getElementById('sanV').textContent = sanCur+'/'+sanMax;
   document.getElementById('sanNumBadge').textContent = sanCur;
   document.getElementById('dbV').textContent = db;
-  document.getElementById('movV').textContent = movTotal();
+  document.getElementById('movV').textContent = mov;
   document.getElementById('ideaV').textContent = idea+'%';
   document.getElementById('luckV').textContent = luck+'%';
   document.getElementById('knowV').textContent = know+'%';
 
   recalcOccPool();
   renderSkills(document.getElementById('skillSearch').value);
+}
+
+['idea-inc','idea-temp'].forEach(id=> document.getElementById(id).addEventListener('input', e=>{
+  state.ideaAdj[id.endsWith('inc')?'inc':'temp'] = parseInt(e.target.value)||0; recalcAll();
+}));
+['know-inc','know-temp'].forEach(id=> document.getElementById(id).addEventListener('input', e=>{
+  state.knowAdj[id.endsWith('inc')?'inc':'temp'] = parseInt(e.target.value)||0; recalcAll();
+}));
+['luck-inc','luck-temp'].forEach(id=> document.getElementById(id).addEventListener('input', e=>{
+  state.luckAdj[id.endsWith('inc')?'inc':'temp'] = parseInt(e.target.value)||0; recalcAll();
+}));
+document.getElementById('mov-adj').addEventListener('input', e=>{
+  state.movAdj = parseInt(e.target.value)||0; recalcAll();
+});
+if(hasLuckStatGlobal){
+  document.getElementById('luck-stat-base').addEventListener('input', e=>{
+    state.stats.LUK.base = parseInt(e.target.value)||0; recalcAll();
+  });
+  document.getElementById('luck-stat-roll').addEventListener('click', ()=>{
+    state.stats.LUK.base = rollStat(STAT_META.LUK); recalcAll();
+  });
 }
 
 ['hp-inc','hp-temp'].forEach(id=> document.getElementById(id).addEventListener('input', e=>{
@@ -930,12 +1513,34 @@ document.getElementById('san-current').addEventListener('input', e=>{
 /* ---------------- 技能タブ ---------------- */
 function skillBaseValue(sk){
   if(!sk.formula) return sk.base||0;
-  const m = sk.formula.match(/^([A-Z]+)x?(\d*)$/);
+  let m = sk.formula.match(/^([A-Z]+)\/(\d+)$/);
+  if(m && STAT_KEYS.includes(m[1])) return Math.floor(statTotal(m[1]) / parseInt(m[2]));
+  m = sk.formula.match(/^([A-Z]+)x?(\d*)$/);
   if(m && STAT_KEYS.includes(m[1])){
     const mult = m[2] ? parseInt(m[2]) : 1;
     return statTotal(m[1]) * mult;
   }
   return sk.base||0;
+}
+function skillSpecControlHtml(sk, dis){
+  if(sk.specChoices){
+    const optsHtml = sk.specChoices.map(o=>`<option value="${o.label}">${o.label}（${o.base}%）</option>`).join('');
+    return `<span>（</span><span class="spec-combo">
+        <input class="spec-input" data-id="${sk.id}" data-field="spec" value="${sk.spec||''}" placeholder="" ${dis}>
+        <span class="spec-arrow-wrap" title="選択肢から選ぶ">
+          <span class="spec-arrow-icon">▾</span>
+          <select class="spec-choice-arrow" data-id="${sk.id}" ${dis}>
+            <option value="" selected></option>
+            ${optsHtml}
+            <option value="__free__">自由記入</option>
+          </select>
+        </span>
+      </span><span>）</span>`;
+  }
+  if(sk.spec!==undefined){
+    return `<span>（</span><input class="spec-input" data-id="${sk.id}" data-field="spec" value="${sk.spec||''}" placeholder="${sk.specHint||''}" ${dis}><span>）</span>`;
+  }
+  return '';
 }
 function occFormulaValue(){
   switch(state.occFormula){
@@ -945,6 +1550,11 @@ function occFormulaValue(){
     case 'EDUx10+APPx10': return statTotal('EDU')*10 + statTotal('APP')*10;
     case 'EDUx10+POWx10': return statTotal('EDU')*10 + statTotal('POW')*10;
     case 'EDUplusINTx5': return (statTotal('EDU')+statTotal('INT'))*5;
+    case 'EDUx4': return statTotal('EDU')*4;
+    case 'EDUx2+DEXx2': return statTotal('EDU')*2 + statTotal('DEX')*2;
+    case 'EDUx2+STRx2': return statTotal('EDU')*2 + statTotal('STR')*2;
+    case 'EDUx2+APPx2': return statTotal('EDU')*2 + statTotal('APP')*2;
+    case 'EDUx2+POWx2': return statTotal('EDU')*2 + statTotal('POW')*2;
     case 'custom': return state.occCustom||0;
     default: return 0;
   }
@@ -961,7 +1571,7 @@ function recalcOccPool(render=true){
   }
 
   if(sheetType.skillPointMode!=='single'){
-    const intTotal = statTotal('INT')*10 + (state.intCorrection||0);
+    const intTotal = statTotal('INT')*(sheetType.interestMultiplier||10) + (state.intCorrection||0);
     const intUsed = state.skills.reduce((a,sk)=>a+(sk.int||0),0);
     const intTotalEl = document.getElementById('intTotal');
     const intRemainEl = document.getElementById('intRemain');
@@ -988,24 +1598,25 @@ function renderPools(){
       </div>
     `;
   } else {
+    const occOptions = sheetType.occFormulaOptions || [
+      {value:'EDUx20', label:'EDU × 20'},
+      {value:'EDUx10+DEXx10', label:'EDU×10 + DEX×10'},
+      {value:'EDUx10+STRx10', label:'EDU×10 + STR×10'},
+      {value:'EDUx10+APPx10', label:'EDU×10 + APP×10'},
+      {value:'EDUx10+POWx10', label:'EDU×10 + POW×10'},
+    ];
+    const optionsHtml = occOptions.map(o=>`<option value="${o.value}">${o.label}</option>`).join('') + `<option value="custom">手動入力</option>`;
     container.innerHTML = `
       <div class="pool">
         <div>
           <div class="name">職業ポイント</div>
-          <select id="occFormula" ${dis}>
-            <option value="EDUx20">EDU × 20</option>
-            <option value="EDUx10+DEXx10">EDU×10 + DEX×10</option>
-            <option value="EDUx10+STRx10">EDU×10 + STR×10</option>
-            <option value="EDUx10+APPx10">EDU×10 + APP×10</option>
-            <option value="EDUx10+POWx10">EDU×10 + POW×10</option>
-            <option value="custom">手動入力</option>
-          </select>
+          <select id="occFormula" ${dis}>${optionsHtml}</select>
         </div>
         <div class="corr only-edit">補正<input type="number" class="no-spin" id="occCorrection" value="${state.occCorrection||0}" ${dis}></div>
         <div class="nums" id="occNums"><b id="occRemain">0</b><div class="total">残り / 総計 <span id="occTotal">0</span></div></div>
       </div>
       <div class="pool">
-        <div><div class="name">興味ポイント</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:4px;">INT × 10</div></div>
+        <div><div class="name">興味ポイント</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:4px;">INT × ${sheetType.interestMultiplier||10}</div></div>
         <div class="corr only-edit">補正<input type="number" class="no-spin" id="intCorrection" value="${state.intCorrection||0}" ${dis}></div>
         <div class="nums" id="intNums"><b id="intRemain">0</b><div class="total">残り / 総計 <span id="intTotal">0</span></div></div>
       </div>
@@ -1031,6 +1642,38 @@ function renderPools(){
 }
 
 const skillBody = document.getElementById('skillBody');
+function renderFeaturedSkillBox(){
+  const box = document.getElementById('featuredSkillBox');
+  if(!box) return;
+  if(!sheetType.featuredSkill){ box.innerHTML=''; return; }
+  const sk = state.skills.find(s=>s.name===sheetType.featuredSkill);
+  if(!sk){ box.innerHTML=''; return; }
+  const base = skillBaseValue(sk);
+  const breedMod = getBreedSkillMod(sk.name);
+  let total = base + (sk.occ||0) + (sk.int||0) + (sk.growth||0) + (sk.other||0) + breedMod.amount;
+  if(breedMod.cap!==null && total>breedMod.cap) total = breedMod.cap;
+  const totalClass = breedMod.amount>0 ? 'skill-total plus' : (breedMod.amount<0 ? 'skill-total minus' : 'skill-total');
+  const dis = state.viewMode ? 'disabled' : '';
+  const showIntColLocal = sheetType.skillPointMode!=='single';
+  box.innerHTML = `
+    <div class="featured-skill-card">
+      <div class="featured-skill-name">${sheetType.featuredSkill}</div>
+      <div class="featured-skill-fields">
+        <label>初期<span class="base-auto">${base}</span></label>
+        <label>${showIntColLocal ? '職業' : '技能P'}<input type="number" class="no-spin" data-field="occ" data-id="${sk.id}" value="${sk.occ||0}" ${dis}></label>
+        ${showIntColLocal ? `<label>興味<input type="number" class="no-spin" data-field="int" data-id="${sk.id}" value="${sk.int||0}" ${dis}></label>` : ''}
+        <label>成長<input type="number" class="no-spin" data-field="growth" data-id="${sk.id}" value="${sk.growth||0}" ${dis}></label>
+        <label>他<input type="number" class="no-spin" data-field="other" data-id="${sk.id}" value="${sk.other||0}" ${dis}></label>
+        <label>合計<span class="${totalClass}">${total}</span></label>
+      </div>
+    </div>
+  `;
+}
+document.getElementById('featuredSkillBox').addEventListener('input', e=>{
+  onSkillFieldInput(e);
+  renderSkills(document.getElementById('skillSearch').value);
+});
+
 function renderSkills(filter){
   const q = (filter||'').trim();
   const showIntCol = sheetType.skillPointMode!=='single';
@@ -1064,10 +1707,11 @@ function renderSkills(filter){
       const dis = (state.viewMode || !allowed) ? 'disabled' : '';
       const intCell = showIntCol ? `<td><input type="number" class="no-spin" data-field="int" data-id="${sk.id}" value="${sk.int||0}" ${dis}></td>` : '';
       const lockHint = (!allowed && sk.requiresBreed) ? `<span class="skill-lock-hint">（要:${sk.requiresBreed}）</span>` : '';
+      const specControl = skillSpecControlHtml(sk, dis);
       const tr = document.createElement('tr');
       tr.className = allowed ? '' : 'skill-locked';
       tr.innerHTML = `
-        <td><div class="skill-name">${sk.name}${lockHint}${sk.spec!==undefined ? `<span>（</span><input class="spec-input" data-id="${sk.id}" data-field="spec" value="${sk.spec||''}" placeholder="${sk.specHint||''}" ${dis}><span>）</span>` : ''}</div></td>
+        <td><div class="skill-name"><input type="checkbox" class="growth-check" data-growthcheck="${sk.id}" ${sk.growthCheck?'checked':''} ${dis} title="成長"> ${sk.name}${lockHint}${specControl}</div></td>
         <td>${sk.custom
           ? `<input type="number" class="no-spin" data-field="base" data-id="${sk.id}" value="${sk.base||0}" ${dis}>`
           : `<span class="base-auto">${base}</span>`}</td>
@@ -1086,10 +1730,16 @@ function renderSkills(filter){
     addTr.innerHTML = `<td colspan="${colCount}"><button type="button" class="btn small outline" data-addcat="${cat.key}">＋ ${cat.label}を追加</button></td>`;
     skillBody.appendChild(addTr);
   });
+  renderFeaturedSkillBox();
 }
 renderSkills();
 
-skillBody.addEventListener('input', e=>{
+function onSkillFieldInput(e){
+  if(e.target.matches('[data-growthcheck]')){
+    const sk = state.skills.find(s=>s.id===e.target.dataset.growthcheck);
+    if(sk) sk.growthCheck = e.target.checked;
+    return;
+  }
   const id = e.target.dataset.id, field = e.target.dataset.field;
   if(!id) return;
   const sk = state.skills.find(s=>s.id===id);
@@ -1123,6 +1773,28 @@ skillBody.addEventListener('input', e=>{
     }
   }
   recalcOccPool(false);
+  if(sheetType.featuredSkill && sk.name===sheetType.featuredSkill) renderFeaturedSkillBox();
+}
+skillBody.addEventListener('input', onSkillFieldInput);
+skillBody.addEventListener('change', e=>{
+  if(e.target.matches('.spec-choice-arrow')){
+    const sk = state.skills.find(s=>s.id===e.target.dataset.id);
+    if(!sk) return;
+    const val = e.target.value;
+    if(val==='__free__'){
+      sk.base = sk.baseDefault||0;
+      sk.spec = '';
+      renderSkills(document.getElementById('skillSearch').value);
+      renderFeaturedSkillBox();
+      recalcOccPool();
+    } else if(val){
+      const opt = (sk.specChoices||[]).find(o=>o.label===val);
+      if(opt){ sk.base = opt.base; sk.spec = opt.label; }
+      renderSkills(document.getElementById('skillSearch').value);
+      renderFeaturedSkillBox();
+      recalcOccPool();
+    }
+  }
 });
 skillBody.addEventListener('click', e=>{
   if(e.target.matches('[data-rm]')){
@@ -1134,56 +1806,83 @@ skillBody.addEventListener('click', e=>{
     const cat = e.target.dataset.addcat;
     const name = prompt('追加する技能名を入力してください');
     if(!name) return;
-    state.skills.push({id:'s'+Date.now(), cat, name, custom:true, spec:undefined, formula:null, base:0, occ:0, int:0, growth:0, other:0});
+    state.skills.push({id:'s'+Date.now(), cat, name, custom:true, spec:undefined, formula:null, base:0, occ:0, int:0, growth:0, other:0, growthCheck:false});
     renderSkills(document.getElementById('skillSearch').value);
   }
 });
 document.getElementById('skillSearch').addEventListener('input', e=> renderSkills(e.target.value));
 
 /* ---------------- メモタブ ---------------- */
+function memoSectionBodyHtml(sec, dis){
+  if(sec.kind==='weapons'){
+    const armorHtml = sec.armorKey ? `
+      <h4 class="memo-subheading">防具</h4>
+      <div class="entries" data-list="${sec.armorKey}"></div>
+      <button type="button" class="btn small outline only-edit" data-addarmor="${sec.armorKey}">＋ 防具を追加</button>` : '';
+    return `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addweapon="${sec.key}">＋ 武器を追加</button>${armorHtml}`;
+  }
+  if(sec.kind==='gear'){
+    return `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addgear="${sec.key}">＋ 所持品を追加</button>`;
+  }
+  if(sec.kind==='wealth'){
+    return `<div class="wealth-grid">` + sec.fields.map(f=>
+      `<div class="field"><label>${f.label}</label><input data-wealthkey="${sec.key}" data-field="${f.key}" value="${(state.memo[sec.key][f.key]||'')}" ${dis}></div>`
+    ).join('') + `</div>`;
+  }
+  if(sec.kind==='simpleList'){
+    return `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addsimple="${sec.key}">＋ 追加</button>`;
+  }
+  if(sec.kind==='tricks'){
+    const lockedHtml = (sec.fixedEntries||[]).map(t => `
+      <div class="entry-card locked-entry">
+        <div class="locked-badge">標準</div>
+        <label>${sec.titleLabel||'名称'}<input value="${t.title}" disabled></label>
+        <label>${sec.noteLabel||'効果'}<textarea disabled>${t.note}</textarea></label>
+      </div>
+    `).join('');
+    return lockedHtml + `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addsimple="${sec.key}">＋ 追加</button>`;
+  }
+  if(sec.kind==='enemyAllyList'){
+    return `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addrelation="${sec.key}">＋ 追加</button>`;
+  }
+  if(sec.kind==='freeText'){
+    return `<textarea data-freekey="${sec.key}" placeholder="自由記述" ${dis}>${state.memo[sec.key]||''}</textarea>`;
+  }
+  return '';
+}
+function memoSectionSummaryHtml(sec){
+  if(!sec.keyConnectable) return sec.label;
+  const checked = !!(state.memo.keyConnections && state.memo.keyConnections[sec.key]);
+  const suffix = checked ? '　（キー・コネクション）' : '';
+  return `<span class="kc-summary-label"><input type="checkbox" class="kc-checkbox only-edit" data-kckey="${sec.key}" ${checked?'checked':''}>${sec.label}${suffix}</span>`;
+}
+function memoSectionDetailsHtml(sec, dis){
+  if(sec.kind==='group'){
+    const inner = (sec.children||[]).map(child=> memoSectionDetailsHtml(child, dis)).join('');
+    return `<details class="memo-section memo-group" data-sectionkey="${sec.key}"><summary>${sec.label}</summary><div class="memo-section-body">${inner}</div></details>`;
+  }
+  const kcClass = (sec.keyConnectable && state.memo.keyConnections && state.memo.keyConnections[sec.key]) ? ' kc-active' : '';
+  return `<details class="memo-section${kcClass}" data-sectionkey="${sec.key}"><summary>${memoSectionSummaryHtml(sec)}</summary><div class="memo-section-body">${memoSectionBodyHtml(sec, dis)}</div></details>`;
+}
+function fillMemoEntries(sec){
+  if(sec.kind==='group'){ (sec.children||[]).forEach(fillMemoEntries); return; }
+  if(sec.kind==='weapons') {
+    renderWeaponEntries(sec.key);
+    if(sec.armorKey) renderArmorEntries(sec.armorKey);
+  }
+  if(sec.kind==='gear') renderGearEntries(sec.key);
+  if(sec.kind==='simpleList' || sec.kind==='tricks') renderSimpleEntries(sec.key, sec.titleLabel||'名称', sec.noteLabel||'メモ');
+  if(sec.kind==='enemyAllyList') renderRelationEntries(sec.key, sec.titleLabel||'名称');
+}
 function renderMemoSections(){
   ensureMemoArraysForType();
   const container = document.getElementById('memoAccordion');
-  container.innerHTML = '';
   const dis = state.viewMode ? 'disabled' : '';
-  sheetType.memoSections.forEach(sec=>{
-    const det = document.createElement('details');
-    det.className='memo-section';
-    det.open = true;
-    let bodyHtml = '';
-    if(sec.kind==='weapons'){
-      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addweapon="${sec.key}">＋ 武器を追加</button>`;
-    } else if(sec.kind==='gear'){
-      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addgear="${sec.key}">＋ 所持品を追加</button>`;
-    } else if(sec.kind==='wealth'){
-      bodyHtml = `<div class="wealth-grid">` + sec.fields.map(f=>
-        `<div class="field"><label>${f.label}</label><input data-wealthkey="${sec.key}" data-field="${f.key}" value="${(state.memo[sec.key][f.key]||'')}" ${dis}></div>`
-      ).join('') + `</div>`;
-    } else if(sec.kind==='simpleList'){
-      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addsimple="${sec.key}">＋ 追加</button>`;
-    } else if(sec.kind==='tricks'){
-      const lockedHtml = (sec.fixedEntries||[]).map(t => `
-        <div class="entry-card locked-entry">
-          <div class="locked-badge">標準</div>
-          <label>${sec.titleLabel||'名称'}<input value="${t.title}" disabled></label>
-          <label>${sec.noteLabel||'効果'}<textarea disabled>${t.note}</textarea></label>
-        </div>
-      `).join('');
-      bodyHtml = lockedHtml + `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addsimple="${sec.key}">＋ 追加</button>`;
-    } else if(sec.kind==='enemyAllyList'){
-      bodyHtml = `<div class="entries" data-list="${sec.key}"></div><button type="button" class="btn small outline only-edit" data-addrelation="${sec.key}">＋ 追加</button>`;
-    } else if(sec.kind==='freeText'){
-      bodyHtml = `<textarea data-freekey="${sec.key}" placeholder="自由記述" ${dis}>${state.memo[sec.key]||''}</textarea>`;
-    }
-    det.innerHTML = `<summary>${sec.label}</summary><div class="memo-section-body">${bodyHtml}</div>`;
-    container.appendChild(det);
-  });
-  sheetType.memoSections.forEach(sec=>{
-    if(sec.kind==='weapons') renderWeaponEntries(sec.key);
-    if(sec.kind==='gear') renderGearEntries(sec.key);
-    if(sec.kind==='simpleList' || sec.kind==='tricks') renderSimpleEntries(sec.key, sec.titleLabel||'名称', sec.noteLabel||'メモ');
-    if(sec.kind==='enemyAllyList') renderRelationEntries(sec.key, sec.titleLabel||'名称');
-  });
+  const openKeys = new Set();
+  container.querySelectorAll('details[data-sectionkey]').forEach(d=>{ if(d.open) openKeys.add(d.dataset.sectionkey); });
+  container.innerHTML = sheetType.memoSections.map(sec=> memoSectionDetailsHtml(sec, dis)).join('');
+  sheetType.memoSections.forEach(fillMemoEntries);
+  container.querySelectorAll('details[data-sectionkey]').forEach(d=>{ if(openKeys.has(d.dataset.sectionkey)) d.open = true; });
 }
 
 function renderWeaponEntries(key){
@@ -1204,6 +1903,23 @@ function renderWeaponEntries(key){
         <label>耐久力<input data-wf="durability" data-list="${key}" data-id="${w.id}" value="${w.durability||''}" ${dis}></label>
         <label>故障<input data-wf="malfunction" data-list="${key}" data-id="${w.id}" value="${w.malfunction||''}" ${dis}></label>
         <label>その他<input data-wf="other" data-list="${key}" data-id="${w.id}" value="${w.other||''}" ${dis}></label>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+function renderArmorEntries(key){
+  const c = document.querySelector(`.entries[data-list="${key}"]`); if(!c) return;
+  c.innerHTML='';
+  const dis = state.viewMode ? 'disabled' : '';
+  (state.memo[key]||[]).forEach(a=>{
+    const div = document.createElement('div'); div.className='entry-card';
+    div.innerHTML = `
+      <button type="button" class="entry-remove only-edit" data-rmarmor="${key}:${a.id}">✕</button>
+      <div class="entry-fields">
+        <label>名称<input data-af="name" data-list="${key}" data-id="${a.id}" value="${a.name||''}" ${dis}></label>
+        <label>部位<input data-af="part" data-list="${key}" data-id="${a.id}" value="${a.part||''}" ${dis}></label>
+        <label>ダメージ減少<input data-af="damageReduction" data-list="${key}" data-id="${a.id}" value="${a.damageReduction||''}" ${dis}></label>
       </div>
     `;
     c.appendChild(div);
@@ -1268,7 +1984,10 @@ function renderRelationEntries(key, titleLabel){
 
 const memoAccordion = document.getElementById('memoAccordion');
 memoAccordion.addEventListener('input', e=>{
-  if(e.target.matches('[data-wf]')){
+  if(e.target.matches('[data-af]')){
+    const key=e.target.dataset.list, id=e.target.dataset.id, f=e.target.dataset.af;
+    const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item[f]=e.target.value;
+  } else if(e.target.matches('[data-wf]')){
     const key=e.target.dataset.list, id=e.target.dataset.id, f=e.target.dataset.wf;
     const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item[f]=e.target.value;
   } else if(e.target.matches('[data-gf]')){
@@ -1292,10 +2011,21 @@ memoAccordion.addEventListener('change', e=>{
     const key=e.target.dataset.list, id=e.target.dataset.id;
     const item=(state.memo[key]||[]).find(x=>x.id===id); if(item) item.kind=e.target.value;
   }
+  if(e.target.matches('[data-kckey]')){
+    const key = e.target.dataset.kckey;
+    if(!state.memo.keyConnections) state.memo.keyConnections = {};
+    state.memo.keyConnections[key] = e.target.checked;
+    renderMemoSections();
+  }
+});
+memoAccordion.addEventListener('click', e=>{
+  if(e.target.matches('[data-kckey]')) e.stopPropagation();
 });
 memoAccordion.addEventListener('click', e=>{
   if(e.target.matches('[data-addweapon]')){
     const key=e.target.dataset.addweapon; state.memo[key].push(freshWeapon()); renderWeaponEntries(key);
+  } else if(e.target.matches('[data-addarmor]')){
+    const key=e.target.dataset.addarmor; state.memo[key].push(freshArmor()); renderArmorEntries(key);
   } else if(e.target.matches('[data-addgear]')){
     const key=e.target.dataset.addgear; state.memo[key].push(freshGear()); renderGearEntries(key);
   } else if(e.target.matches('[data-addsimple]')){
@@ -1311,6 +2041,9 @@ memoAccordion.addEventListener('click', e=>{
   } else if(e.target.matches('[data-rmweapon]')){
     const [key,id]=e.target.dataset.rmweapon.split(':');
     state.memo[key]=state.memo[key].filter(x=>x.id!==id); renderWeaponEntries(key);
+  } else if(e.target.matches('[data-rmarmor]')){
+    const [key,id]=e.target.dataset.rmarmor.split(':');
+    state.memo[key]=state.memo[key].filter(x=>x.id!==id); renderArmorEntries(key);
   } else if(e.target.matches('[data-rmgear]')){
     const [key,id]=e.target.dataset.rmgear.split(':');
     state.memo[key]=state.memo[key].filter(x=>x.id!==id); renderGearEntries(key);
@@ -1335,7 +2068,7 @@ function renderCustomMemo(){
   state.memo.custom.forEach(item=>{
     const det = document.createElement('details');
     det.className='memo-section';
-    det.open = true;
+    det.open = false;
     const locked = !!item.password && !unlockedMemos.has(item.id);
     const bodyInner = locked
       ? `<div class="locked-memo">
@@ -1472,8 +2205,18 @@ document.getElementById('importBtn').addEventListener('click', ()=> document.get
 /* ---------------- ココフォリア出力 ---------------- */
 function buildCcfoliaPayload(){
   const hp = hpTotal(), mp = mpTotal();
-  const sanMax = Math.min(99, statTotal('POW')*5);
+  const sanMax = Math.min(99, statTotal('POW')*(sheetType.sanFromPow!==undefined?sheetType.sanFromPow:5));
   const sanCur = state.sanCurrent===null ? sanMax : state.sanCurrent;
+  const cmd = sheetType.ccfoliaCmd || 'CCB';
+  const rollMul = sheetType.statRollMultiplier!==undefined ? sheetType.statRollMultiplier : 5;
+
+  const ccScaleMul = sheetType.percentileScale ? 1 : 5;
+  const ccIdea = statTotal('INT')*ccScaleMul;
+  const ccKnow = statTotal('EDU')*ccScaleMul;
+  const ccLuck = (sheetType.statKeys && sheetType.statKeys.includes('LUK')) ? statTotal('LUK') : statTotal('POW')*ccScaleMul;
+
+  const luckToggleEl = document.getElementById('ccfoliaLuckToggle');
+  const includeLuckStatus = !!(sheetType.luckToggleAvailable && luckToggleEl && luckToggleEl.checked);
 
   // いあきゃら等のココフォリア出力例に合わせ、status / params / commands を構築する。
   const status = [
@@ -1481,15 +2224,26 @@ function buildCcfoliaPayload(){
     {label:'MP', value:mp, max:mp},
     {label:sheetType.sanLabel, value:sanCur, max:sanMax},
   ];
+  if(includeLuckStatus){
+    status.push({label:'幸運', value:ccLuck, max:ccLuck});
+  }
 
   const params = [];
-  STAT_KEYS.forEach(k=> params.push({label:k, value:String(statTotal(k))}));
+  STAT_KEYS.forEach(k=>{ if(!(sheetType.hiddenStatKeys||[]).includes(k)) params.push({label:k, value:String(statTotal(k))}); });
+  if(sheetType.hasBuild){
+    const build = computeDamage(statTotal('STR')+statTotal('SIZ')).build;
+    const buildDisplay = build===null ? '0' : (build===0 ? '0' : (build>0?'+':'')+build);
+    params.push({label:'BLD', value:buildDisplay});
+  }
+  if(sheetType.hasMovement){
+    params.push({label:'MOV', value:String(movTotal()+(state.movAdj||0))});
+  }
 
   const commandLines = [
-    `1d100<={${sheetType.sanLabel}} 【${sheetType.sanFullLabel}ロール】`,
-    `CCB<=${statTotal('INT')*5} 【アイデア】`,
-    `CCB<=${statTotal('POW')*5} 【幸運】`,
-    `CCB<=${statTotal('EDU')*5} 【知識】`,
+    `${sheetType.ccfoliaCmd==='CC' ? 'CC' : '1d100'}<={${sheetType.sanLabel}} 【${sheetType.sanFullLabel}ロール】`,
+    `${cmd}<=${ccIdea} 【アイデア】`,
+    includeLuckStatus ? `${cmd}<={幸運} 【幸運】` : `${cmd}<=${ccLuck} 【幸運】`,
+    `${cmd}<=${ccKnow} 【知識】`,
   ];
 
   function skillTotal(sk){
@@ -1497,7 +2251,7 @@ function buildCcfoliaPayload(){
   }
   function skillLine(sk){
     const label = sk.spec ? `${sk.name}（${sk.spec}）` : sk.name;
-    return `CCB<=${skillTotal(sk)} 【${label}】`;
+    return `${cmd}<=${skillTotal(sk)} 【${label}】`;
   }
 
   // よく使う技能(目星・聞き耳など)をチャットパレット上部に優先配置する。
@@ -1518,23 +2272,30 @@ function buildCcfoliaPayload(){
   });
 
   // ダメージ判定(素手・格闘攻撃などの目安)を、能力値ロールの直前に追加する。
-  const dbTermRaw = dbFromSum(statTotal('STR')+statTotal('SIZ'));
-  const dbTerm = dbTermRaw==='±0' ? '' : dbTermRaw;
+  const dbTermRaw = computeDamage(statTotal('STR')+statTotal('SIZ')).db;
+  const dbTerm = dbTermRaw==='±0' ? '+0' : dbTermRaw;
   (sheetType.ccfoliaDamage||[]).forEach(d=>{
     const expr = d.db ? `${d.dice}${dbTerm}` : d.dice;
     commandLines.push(`${expr} 【ダメージ判定】`);
   });
 
-  // 能力値の×5ロールも、いあきゃらの出力例と同様に末尾へ追加する。
+  // 能力値ロール。6版・猫探索者版はダイス実値を5倍して算出、7版は能力値がそのまま％のため倍率なし。
+  // 幸運など上部で別枠ロールが用意されている能力値(hiddenStatKeys)はここでは重複出力しない。
+  const excludeFromStatRoll = sheetType.hiddenStatKeys || [];
   STAT_KEYS.forEach(k=>{
-    commandLines.push(`CCB<={${k}}*5 【${k} × 5】`);
+    if(excludeFromStatRoll.includes(k)) return;
+    if(rollMul!==1){
+      commandLines.push(`${cmd}<={${k}}*${rollMul} 【${k} × ${rollMul}】`);
+    } else {
+      commandLines.push(`${cmd}<={${k}}　【${k}】`);
+    }
   });
 
   // キャラクターメモには基本情報を書き出さない(空欄のまま出力する)。
   const memoLines = [];
 
   // 駒名はキャラクター名。
-  const charName = getCharacterName() || '無名の探索者';
+  const charName = getCharacterName() || '新しい探索者';
   const displayName = charName;
 
   return {
@@ -1581,11 +2342,15 @@ document.getElementById('importFile').addEventListener('change', e=>{
       state.stats = Object.assign({}, Object.fromEntries(STAT_KEYS.map(k=>[k,{base:(STAT_META[k].fixed!==undefined?STAT_META[k].fixed:0),inc:0,temp:0}])), state.stats||{});
       state.hpAdj = Object.assign({inc:0,temp:0}, state.hpAdj||{});
       state.mpAdj = Object.assign({inc:0,temp:0}, state.mpAdj||{});
+      state.ideaAdj = Object.assign({inc:0,temp:0}, state.ideaAdj||{});
+      state.knowAdj = Object.assign({inc:0,temp:0}, state.knowAdj||{});
+      state.luckAdj = Object.assign({inc:0,temp:0}, state.luckAdj||{});
+      state.movAdj = state.movAdj||0;
       state.memo = Object.assign({custom:[]}, state.memo||{});
       unlockedMemos.clear();
       ensureMemoArraysForType();
       if(!state.skills || !state.skills.length){
-        state.skills = DEFAULT_SKILLS.map((s,i)=>({id:'s'+i, cat:s.cat, name:s.name, spec:s.spec?'':undefined, specHint:s.specHint||'', formula:s.formula||null, base:s.base!==undefined?s.base:0, occ:0, int:0, growth:0, other:0, requiresBreed:s.requiresBreed||null}));
+        state.skills = DEFAULT_SKILLS.map((s,i)=>({id:'s'+i, cat:s.cat, name:s.name, spec:(s.spec||s.specChoices)?'':undefined, specHint:s.specHint||'', formula:s.formula||null, base:s.base!==undefined?s.base:0, baseDefault:s.base!==undefined?s.base:0, occ:0, int:0, growth:0, other:0, requiresBreed:s.requiresBreed||null, growthCheck:false, specChoices:s.specChoices||null, specChoice:''}));
       }
       hydrateFromState();
     }catch(err){
@@ -1612,11 +2377,20 @@ function hydrateFromState(){
   document.getElementById('hp-temp').value = state.hpAdj.temp||0;
   document.getElementById('mp-inc').value = state.mpAdj.inc||0;
   document.getElementById('mp-temp').value = state.mpAdj.temp||0;
+  document.getElementById('idea-inc').value = state.ideaAdj.inc||0;
+  document.getElementById('idea-temp').value = state.ideaAdj.temp||0;
+  document.getElementById('know-inc').value = state.knowAdj.inc||0;
+  document.getElementById('know-temp').value = state.knowAdj.temp||0;
+  document.getElementById('luck-inc').value = state.luckAdj.inc||0;
+  document.getElementById('luck-temp').value = state.luckAdj.temp||0;
+  document.getElementById('mov-adj').value = state.movAdj||0;
+  if(hasLuckStatGlobal) document.getElementById('luck-stat-base').value = state.stats.LUK.base||0;
   if(sheetType.breedData){
     syncBreedTrick(state.identity && state.identity.breed);
     enforceBreedCaps();
     enforceBreedRestrictions();
   }
+  syncAgeStats();
   recalcAll();
   applyViewMode();
   recalcOccPool(false);
